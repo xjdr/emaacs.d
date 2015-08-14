@@ -1,5 +1,5 @@
 ;;; init.el --- emacs configuration file with more pleasant defaults
-;; Copyright (C) 1999-2014 Jeff Rose
+;; Copyright (C) 1999-2015 Jeff Rose
 ;         ___           ___           ___           ___           ___
 ;        /\__\         /\  \         /\  \         /\__\         /\__\
 ;       /:/ _/_       |::\  \       /::\  \       /:/  /        /:/ _/_
@@ -13,12 +13,11 @@
 ; \/__/  \/__/         \/__/         \/__/         \/__/         \/__/
 
 ;; Author: Jeff Rose
-;; URL: https://github.com/jeffrose12/emacs
-;; Version: 0.01
-;; Keywords: emacs, dotfile, config
+;; URL: https://github.com/xjdr/emacs.d
+;; Version: 0.2
 
 (setq user-full-name "Jeff Rose")
-(setq user-mail-address "jefrose@paypal.com")
+(setq user-mail-address "jeff.rose12@gmail.com")
 
 ;; Makes life easier
 (setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
