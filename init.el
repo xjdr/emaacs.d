@@ -35,6 +35,9 @@
 ;; SYNTAX
 ;; -------~-------~--~------------------~------
 
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+
 (global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
 
@@ -42,15 +45,18 @@
 (show-paren-mode t)
 
 ;; hilight current line
-(global-hl-line-mode 1)
+;;(global-hl-line-mode 1)
 
 ;; ========== Place Backup Files in Specific Directory ==========
 
-;; Enable backup files.
-(setq make-backup-files t)
-
-;; Save all backup file in this directory.
-(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+(setq
+ backup-by-copying t      ; don't clobber symlinks
+ backup-directory-alist
+ '(("." . "~/.emacs.d/auto-save-list"))    ; don't litter my fs tree
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+    version-control t)       ; use versioned backups
 
 ;; change the filename collisions in emacs
 (require 'uniquify)
@@ -60,6 +66,7 @@
 (add-hook 'after-init-hook '(lambda ()
   (load "~/.emacs.d/site-lisp/emacs-tile.el")
   (load "~/.emacs.d/site-lisp/mode-line.el")
+  (load "~/.emacs.d/site-lisp/google-c-style.el")
 ))
 
 (require 'ido)
@@ -72,23 +79,22 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (add-hook 'dired-load-hook
-            (function (lambda () (load "dired-x"))))
+	  (function (lambda () (load "dired-x"))))
+
+;; c++ 
+(defun my-c++-mode-hook ()
+  (google-set-c-style)
+   (google-make-newline-indent))
+
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
+
+;; python
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode t)
+            (setq python-indent 2)
+            (setq tab-width 2))
+              (tabify (point-min) (point-max)))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'junio t)
-
-(require 'whitespace)
- (setq whitespace-style '(face empty tabs lines-tail trailing))
- (global-whitespace-mode t)
-  (custom-set-faces
-   '(my-tab-face            ((((class color)) (:background "grey10"))) t)
-   '(my-trailing-space-face ((((class color)) (:background "gray10"))) t)
-   '(my-long-line-face ((((class color)) (:background "gray10"))) t))
- (add-hook 'font-lock-mode-hook
-            (function
-             (lambda ()
-               (setq font-lock-keywords
-                     (append font-lock-keywords
-                             '(("\t+" (0 'my-tab-face t))
-                               ("^.\\{81,\\}$" (0 'my-long-line-face t))
-                               ("[ \t]+$"      (0 'my-trailing-space-face t))))))))
