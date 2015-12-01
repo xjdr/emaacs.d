@@ -8,13 +8,22 @@
 (setq user-full-name "Jeff Rose")
 (setq user-mail-address "jeff.rose12@gmail.com")
 
+(when (>= emacs-major-version 24)
+	(require 'package)
+	(add-to-list
+	 'package-archives
+	 '("melpa" . "http://melpa.org/packages/")
+	 '("marmalade" . "http://marmalade-repo.org/packages/")
+	 )
+	(package-initialize))
+
 ;; Makes life easier
 (setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
 (require 'cl)
 
 ;; SHHHH Splach screen & Stuff
 (setq inhibit-splash-screen t
-      initial-scratch-message nil)
+			initial-scratch-message nil)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -49,9 +58,9 @@
 
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (add-hook 'after-init-hook '(lambda ()
-                              (load "~/.emacs.d/site-lisp/emacs-tile.el")
-                              (load "~/.emacs.d/site-lisp/mode-line.el")
-                              (load "~/.emacs.d/site-lisp/google-c-style.el")
+															(load "~/.emacs.d/site-lisp/emacs-tile.el")
+															(load "~/.emacs.d/site-lisp/mode-line.el")
+															(load "~/.emacs.d/site-lisp/google-c-style.el")
 ))
 
 (require 'ido)
@@ -64,32 +73,32 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (add-hook 'dired-load-hook
-          (function (lambda () (load "dired-x"))))
+					(function (lambda () (load "dired-x"))))
 
 ;; c++ 
 (defun my-c++-mode-hook ()
-  (google-set-c-style)
-  (google-make-newline-indent))
+	(google-set-c-style)
+	(google-make-newline-indent))
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
 ;; python
 (add-hook 'python-mode-hook
-          (lambda () 
-            (setq indent-tabs-mode t)
-            (setq python-indent 2)
-            (setq tab-width 2))
-            (tabify (point-min) (point-max)))
+					(lambda () 
+						(setq indent-tabs-mode t)
+						(setq python-indent 2)
+						(setq tab-width 2))
+						(tabify (point-min) (point-max)))
 
 ;; java
 (add-hook 'java-mode-hook
-          (lambda ()
-            "Treat Java 1.5 @-style annotations as comments."
-            (setq c-comment-start-regexp "(@|/(/|[*][*]?))")
-            (modify-syntax-entry ?@ "< b" java-mode-syntax-table)
-            (setq c-basic-offset 2
-                  tab-width 2
-                  indent-tabs-mode t)))
+					(lambda ()
+						"Treat Java 1.5 @-style annotations as comments."
+						(setq c-comment-start-regexp "(@|/(/|[*][*]?))")
+						(modify-syntax-entry ?@ "< b" java-mode-syntax-table)
+						(setq c-basic-offset 2
+									tab-width 2
+									indent-tabs-mode t)))
 
 ;; scala
 (add-to-list 'load-path "~/.emacs.d/vendor/scala-mode2/")
