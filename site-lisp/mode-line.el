@@ -67,36 +67,35 @@
 (make-face 'mode-line-80col-face)
 
 (set-face-attribute 'mode-line nil
-    :foreground "gray60" :background "gray20"
+    :foreground "#657b83" :background "#073642"
     :inverse-video nil
-    :box '(:line-width 6 :color "gray20" :style nil))
+    :box '(:line-width 6 :color "#073642" :style nil))
 (set-face-attribute 'mode-line-inactive nil
-    :foreground "gray80" :background "gray40"
+    :foreground "#586e75" :background "#002b36"
     :inverse-video nil
-    :box '(:line-width 6 :color "gray40" :style nil))
-
+    :box '(:line-width 6 :color "#002b36" :style nil))
 (set-face-attribute 'mode-line-read-only-face nil
     :inherit 'mode-line-face
-    :foreground "#4271ae"
-    :box '(:line-width 2 :color "#4271ae"))
+    :foreground "#6c71c4"
+    :box '(:line-width 2 :color "#6c71c4"))
 (set-face-attribute 'mode-line-modified-face nil
     :inherit 'mode-line-face
-    :foreground "#c82829"
-    :background "#ffffff"
-    :box '(:line-width 2 :color "#c82829"))
+    :foreground "#b58900"
+    :background "#073642"
+    :box '(:line-width 2 :color "#b58900"))
 (set-face-attribute 'mode-line-folder-face nil
     :inherit 'mode-line-face
     :foreground "gray60")
 (set-face-attribute 'mode-line-filename-face nil
     :inherit 'mode-line-face
-    :foreground "#eab700"
+    :foreground "#859900"
     :weight 'bold)
 (set-face-attribute 'mode-line-position-face nil
     :inherit 'mode-line-face
-    :family "Menlo" :height 100)
+    :family "Menlo" :height 110)
 (set-face-attribute 'mode-line-mode-face nil
     :inherit 'mode-line-face
-    :foreground "gray80")
+    :foreground "#268bd2")
 (set-face-attribute 'mode-line-minor-mode-face nil
     :inherit 'mode-line-mode-face
     :foreground "gray40"

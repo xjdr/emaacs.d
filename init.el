@@ -3,7 +3,7 @@
 
 ;; Author: Jeff Rose
 ;; URL: https://github.com/xjdr/emacs.d
-;; Version: 0.2
+;; Version: 0.3
 
 (setq user-full-name "Jeff Rose")
 (setq user-mail-address "jeff.rose12@gmail.com")
@@ -18,15 +18,18 @@
 	(package-initialize))
 
 ;; Makes life easier
-(setenv "PATH" (concat "/usr/bin:" (getenv "PATH")))
+(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 (require 'cl)
 
 ;; SHHHH Splach screen & Stuff
 (setq inhibit-splash-screen t
-			initial-scratch-message nil)
+			initial-scratch-message nil
+			visible-bell 1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(set-fringe-mode 0)
+(global-set-key "\M-\r" 'toggle-frame-fullscreen)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; -------~-------~--~------------------~------
@@ -42,15 +45,10 @@
 ;; show matching parens
 (show-paren-mode t)
 
-;; hilight current line
-;;(global-hl-line-mode 1)
-
 ;; ========== Place Backup Files in Specific Directory ==========
 
 (setq backup-inhibited t)
-
 (setq auto-save-default nil)
-
 
 ;; change the filename collisions in emacs
 (require 'uniquify)
@@ -69,11 +67,11 @@
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
 
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
+
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
-(add-hook 'dired-load-hook
-					(function (lambda () (load "dired-x"))))
 
 ;; c++ 
 (defun my-c++-mode-hook ()
@@ -100,16 +98,23 @@
 									tab-width 2
 									indent-tabs-mode t)))
 
-;; scala
-(add-to-list 'load-path "~/.emacs.d/vendor/scala-mode2/")
-(require 'scala-mode2)
+;; markdown
+;;(load "~/.emacs.d/site-lisp/markdown-mode.el")
+(require 'markdown-mode)
+(autoload 'markdown-mode "markdown-mode"
+	 "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
-;; clojure
-(load "~/.emacs.d/site-lisp/clojure-mode.el")
-(load "~/.emacs.d/site-lisp/clojure-mode-extra-font-locking.el")
-(require 'clojure-mode)
+;; Custom Key Binding
+(global-set-key (kbd "M-j")
+            (lambda ()
+                  (interactive)
+                  (join-line -1)))
 
 ;; theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'junio t)
-
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
+(customize-set-variable 'frame-background-mode 'dark)
+(load-theme 'solarized t)
