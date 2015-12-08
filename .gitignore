@@ -1,6 +1,6 @@
 smex-items
-ido-last
+ido.last
 elpa/
 auto-save-list/
 backups/
-places/
+places

@@ -1,0 +1,42 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/jefrose/src/xjdr/" . "prod-ng/")
+ ("/Users/jefrose/src/" . "xjdr/")
+ ("/Users/jefrose/.emacs.d/" . "site-lisp/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/jefrose/.emacs.d/"
+ "/Users/jefrose/.emacs.d/site-lisp/"
+ "/Users/jefrose/src/xjdr/prod-ng/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "init.el"
+ "ido.last"
+ "better-defaults.el"
+ "install_prod-ng.sh"
+ "README.md"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/jefrose/.emacs.d/" (22119 22717 0 0) "themes/" "smex-items" "site-lisp/" "places" "init.el" "ido.last" "elpa/" "auto-save-list/" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/jefrose/.emacs.d/site-lisp/" (22119 22367 0 0) "smex.el" "mode-line.el" "markdown-mode.el" "ido-vertical-mode.el" "google-c-style.el" "emacs-tile.el" "better-defaults.el" "../" "./")
+
+ ("/Users/jefrose/src/xjdr/prod-ng/" (22119 21933 0 0) "README.md" "install_prod-ng.sh" "cleanup.sh" ".git/" "../" "./")
+
+ ("/Users/jefrose/" (22119 22008 0 0) "workspace/" "VirtualBox VMs/" "todo.md" "src/" "safari_url" "s_devops.md" "riddle_solve.md" "Public/" "ppsb-devbox.md" "playbook.retry" "Pictures/" "Music/" "Movies/" "Mesos-Terraform.pem.pub" "Mesos-Terraform.pem" "maven-compiler.vim/" "Library/" "jr_api_dev_aws_creds" "install_jeffos.sh" "hubot_api.md" "go/" "GCE.md" "FreeBSD-10.2-RELEASE-amd64-memstick.img" "emacs.d/" "Dropbox (Personal)/" "Downloads/" "Documents/" "DevxMesos.pub" "Desktop/" "config/" "cleanup.sh" "circleDevX" "circleAws" "Box Sync/" "bin/" "Applications/" ".zshrc" ".zlogin" ".wget-hsts" ".vnc/" ".viminfo" ".vim/" ".v8flags.3.28.71.19.jefrose.json" ".travis/" ".Trash/" ".tmux.conf" ".terraform.d/" ".ssh/" ".sh_history" ".screenrc" ".scala_history" ".sbt/" ".rvm/" ".rnd" ".qt/" ".pythonrc.py" ".pyhistory" ".profile" ".packer.d/" ".osquery/" ".oracle_jre_usage/" ".nx/" ".npm/" ".node_repl_history" ".node-gyp/" ".nbprofiler/" ".mkshrc" ".m2/" ".local.bash" ".lobo/" ".lldb/" ".lesshst" ".keepassx/" ".ivy2/" ".IntelliJIdea15/" ".IntelliJIdea14/" ".IdeaIC14/" ".idea-build/" ".gradle/" ".gnupg/" ".gitconfig" ".gem/" ".extras.bash" ".emacs.d.bak/" ".emacs.d/" ".DS_Store" ".dropbox/" ".docker/" ".cups/" ".config/" ".CLion12/" ".CFUserTextEncoding" ".cassandra/" ".boot2docker/" ".bashrc" ".bash_profile" ".bash_history" ".babel.json" ".aws/" ".ansible/" ".android/" ".activator/" ".account" "../" "./")
+
+ ("/Users/jefrose/src/xjdr/" (22118 35859 0 0) "zookeeper-image-ubuntu/" "zookeeper-image/" "xjdr.github.io/" "xio2/" "xio.bak/" "xio/" "TLS/" "server/" "scala_school2/" "qfe/" "prod-ng/" "mesos-cluster-terraform/" "mesos-base/" "log/" "kafka-image-ubuntu/" "kafka-image/" "increds/" "image-base-ubuntu/" "image-base/" "Hannibal/" "frontendwork/" "ec2_scala_client/" "dotfiles/" "docker-platform-tools/" "docker-mesos-test/" "devbox/" "cpp/" "clionTest/" "c/" "build-debian-cloud/" "bootstrap-dev/" "blackbeard/" "artesian-wifi/" "ansible-zookeeper/" "ansible-kafka/" ".DS_Store" "../" "./")
+
+ ("/Users/jefrose/src/" (22063 59499 0 0) "xjdr/" "twitter/" "square/" "paypal/" "netflix/" "google/" "facebook/" "cpp/" "cosmos/" "bt/" "apache/" ".DS_Store" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
