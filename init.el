@@ -8,14 +8,34 @@
 (setq user-full-name "Jeff Rose")
 (setq user-mail-address "jeff.rose12@gmail.com")
 
-(when (>= emacs-major-version 24)
-	(require 'package)
-	(add-to-list
-	 'package-archives
-	 '("melpa" . "http://melpa.org/packages/")
-	 '("marmalade" . "http://marmalade-repo.org/packages/")
-	 )
-	(package-initialize))
+; list the packages you want
+(setq package-list '(magit))
+
+; list the repositories containing them
+(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+; activate all the packages (in particular autoloads)
+(package-initialize)
+
+; fetch the list of packages available 
+(unless package-archive-contents
+  (package-refresh-contents))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;;(when (>= emacs-major-version 24)
+;;	(require 'package)
+;;	(add-to-list
+;;	 'package-archives
+;;	 '("melpa" . "http://melpa.org/packages/")
+;;	 '("marmalade" . "http://marmalade-repo.org/packages/")
+;;	 )
+;;	(package-initialize))
 
 ;; Makes life easier
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
@@ -32,34 +52,22 @@
 (global-set-key "\M-\r" 'toggle-frame-fullscreen)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; -------~-------~--~------------------~------
-;; SYNTAX
-;; -------~-------~--~------------------~------
-
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
-
-(global-font-lock-mode t)
-(setq font-lock-maximum-decoration t)
-
-;; show matching parens
-(show-paren-mode t)
-
-;; ========== Place Backup Files in Specific Directory ==========
-
-(setq backup-inhibited t)
-(setq auto-save-default nil)
-
-;; change the filename collisions in emacs
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
-
+;; Load site-lisp
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (add-hook 'after-init-hook '(lambda ()
 															(load "~/.emacs.d/site-lisp/emacs-tile.el")
 															(load "~/.emacs.d/site-lisp/mode-line.el")
 															(load "~/.emacs.d/site-lisp/google-c-style.el")
 ))
+
+;; Syntax
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+
+(global-font-lock-mode t)
+(setq font-lock-maximum-decoration t)
+
+(require 'better-defaults)
 
 (require 'ido)
 (ido-mode 'both)
@@ -110,9 +118,9 @@
 
 ;; Custom Key Binding
 (global-set-key (kbd "M-j")
-            (lambda ()
-                  (interactive)
-                  (join-line -1)))
+						(lambda ()
+									(interactive)
+									(join-line -1)))
 
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
