@@ -9,37 +9,32 @@
 (setq user-mail-address "jeff.rose12@gmail.com")
 
 ; list the packages you want
-(setq package-list '(magit))
+(setq package-list '(magit yaml-mode))
 
-; list the repositories containing them
-(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-
-; activate all the packages (in particular autoloads)
-(package-initialize)
-
-; fetch the list of packages available 
-(unless package-archive-contents
-  (package-refresh-contents))
-
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
-
-;;(when (>= emacs-major-version 24)
-;;	(require 'package)
-;;	(add-to-list
-;;	 'package-archives
-;;	 '("melpa" . "http://melpa.org/packages/")
-;;	 '("marmalade" . "http://marmalade-repo.org/packages/")
-;;	 )
-;;	(package-initialize))
+(when (>= emacs-major-version 24)
+																				; list the repositories containing them
+	(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
+													("gnu" . "http://elpa.gnu.org/packages/")
+													("marmalade" . "http://marmalade-repo.org/packages/")))
+																				; activate all the packages (in particular autoloads)
+	(package-initialize)
+																				; fetch the list of packages available
+	(unless package-archive-contents
+		(package-refresh-contents))
+																				; install the missing packages
+	(dolist (package package-list)
+		(unless (package-installed-p package)
+			(package-install package))))
 
 ;; Makes life easier
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 (require 'cl)
+
+;; NO BACKUPS
+;disable backup
+(setq backup-inhibited t)
+;disable auto save
+(setq auto-save-default nil)
 
 ;; SHHHH Splach screen & Stuff
 (setq inhibit-splash-screen t
@@ -64,6 +59,10 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 
+;; make tab key always call a indent command.
+(setq-default tab-always-indent t)
+
+;; Font lock
 (global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
 
@@ -102,9 +101,8 @@
 						"Treat Java 1.5 @-style annotations as comments."
 						(setq c-comment-start-regexp "(@|/(/|[*][*]?))")
 						(modify-syntax-entry ?@ "< b" java-mode-syntax-table)
-						(setq c-basic-offset 2
-									tab-width 2
-									indent-tabs-mode t)))
+							(google-set-c-style)
+							(google-make-newline-indent)))
 
 ;; markdown
 ;;(load "~/.emacs.d/site-lisp/markdown-mode.el")
@@ -121,6 +119,20 @@
 						(lambda ()
 									(interactive)
 									(join-line -1)))
+
+(global-set-key (kbd "s-/")
+								(lambda ()
+									(interactive)
+									(comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+
+(global-set-key (kbd "C-o")
+								(lambda ()
+									(interactive)
+									(previous-line)
+									(end-of-line)
+									(newline)))
+
+(global-set-key (kbd "M-s") 'magit-status)
 
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
