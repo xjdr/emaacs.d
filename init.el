@@ -12,7 +12,7 @@
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (add-hook 'after-init-hook '(lambda ()
 															(load "~/.emacs.d/site-lisp/emacs-tile.el")
-															(load "~/.emacs.d/site-lisp/mode-line.el")
+;															(load "~/.emacs.d/site-lisp/mode-line.el")
 															(load "~/.emacs.d/site-lisp/google-c-style.el")
 ))
 
@@ -78,7 +78,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Custom key bindings
-(global-set-key "\M-\r" 'toggle-frame-fullscreen)
+(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
@@ -162,9 +162,17 @@
 									(end-of-line)
 									(newline)))
 
+(when (eq system-type 'darwin) ;; mac specific settings
+	;(setq mac-option-modifier 'alt)
+	;(setq mac-command-modifier 'meta)
+	(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+	)
+
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
-(customize-set-variable 'frame-background-mode 'dark)
+(customize-set-variable 'frame-background-mode 'light)
 (if window-system
-		(load-theme 'solarized t)
+		(progn
+			(load-theme 'solarized t)
+			(load "~/.emacs.d/site-lisp/mode-line-light.el"))
 	(load-theme 'wombat t))
