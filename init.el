@@ -130,6 +130,10 @@
 							(google-set-c-style)
 							(google-make-newline-indent)))
 
+;; YAML
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
+
 ;; markdown
 (require 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
@@ -162,7 +166,8 @@
 									(end-of-line)
 									(newline)))
 
-(when (eq system-type 'darwin) ;; mac specific settings
+;; mac specific settings
+(when (eq system-type 'darwin)
 	;(setq mac-option-modifier 'alt)
 	;(setq mac-command-modifier 'meta)
 	(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
@@ -174,5 +179,7 @@
 (if window-system
 		(progn
 			(load-theme 'solarized t)
-			(load "~/.emacs.d/site-lisp/mode-line-light.el"))
-	(load-theme 'wombat t))
+			(load "~/.emacs.d/site-lisp/mode-line-solarized-light.el"))
+  (progn
+    (load-theme 'wombat t)
+    (load "~/.emacs.d/site-lisp/mode-line.el")))
