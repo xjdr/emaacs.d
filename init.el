@@ -1,3 +1,4 @@
+
 ;;; init.el --- emacs configuration file with more pleasant defaults
 ;; Copyright (C) 1999-2015 Jeff Rose
 
@@ -8,11 +9,10 @@
 (setq user-full-name "Jeff Rose")
 (setq user-mail-address "jeff.rose12@gmail.com")
 
-;; Load site-lisp
+;; load site-lisp
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (add-hook 'after-init-hook '(lambda ()
 															(load "~/.emacs.d/site-lisp/emacs-tile.el")
-;															(load "~/.emacs.d/site-lisp/mode-line.el")
 															(load "~/.emacs.d/site-lisp/google-c-style.el")
 ))
 
@@ -134,6 +134,13 @@
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
 
+;; Web
+(require 'web-mode)
+(setq web-mode-markup-indent-offset 2)
+(setq web-mode-css-indent-offset 2)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+
 ;; markdown
 (require 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
@@ -149,7 +156,7 @@
 						(flyspell-mode t)))
 
 ;; Dockerfile Support
-(add-to-list 'load-path "/your/path/to/dockerfile-mode/")
+;(add-to-list 'load-path "/")
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
@@ -187,5 +194,5 @@
 ;			(load "~/.emacs.d/site-lisp/mode-line-solarized-light.el"))
 ;	(progn
 		(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-    (load-theme 'ir-black t)
+		(load-theme 'ir-black t)
 		(load "~/.emacs.d/site-lisp/mode-line.el");))
