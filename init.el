@@ -187,5 +187,5 @@
 ;			(load "~/.emacs.d/site-lisp/mode-line-solarized-light.el"))
 ;	(progn
 		(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-    (load-theme 'ir-blackt)
+    (load-theme 'ir-black t)
 		(load "~/.emacs.d/site-lisp/mode-line.el");))
