@@ -1,10 +1,9 @@
-
 ;;; init.el --- emacs configuration file with more pleasant defaults
 ;; Copyright (C) 1999-2015 Jeff Rose
 
 ;; Author: Jeff Rose
 ;; URL: https://github.com/xjdr/emacs.d
-;; Version: 0.4
+;; Version: 0.5
 
 (setq user-full-name "Jeff Rose")
 (setq user-mail-address "jeff.rose12@gmail.com")
@@ -17,9 +16,7 @@
 ))
 
 ;; Lets get some packages
-(setenv "PATH" (concat "/usr/local/bin:/opt/local/bin:/usr/bin:/bin" (getenv "PATH")))
-(setenv "GOPATH" (concat (getenv "HOME") "/src/golang"))
-(add-to-list 'exec-path (concat (getenv "GOPATH") "/bin"))
+(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin" (getenv "PATH")))
 (require 'cl)
 
 (load "package")
@@ -115,11 +112,11 @@
 
 ;; python
 (add-hook 'python-mode-hook
-					(lambda () 
-						(setq indent-tabs-mode t)
-						(setq python-indent 2)
-						(setq tab-width 2))
-						(tabify (point-min) (point-max)))
+					(lambda ()
+            (setq-default indent-tabs-mode nil)
+            (setq-default tab-width 2)
+            (setq-default python-indent 2)
+						(tabify (point-min) (point-max))))
 
 ;; java
 (add-hook 'java-mode-hook
@@ -139,7 +136,7 @@
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-css-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
+(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
 
 ;; markdown
 (require 'markdown-mode)
@@ -156,7 +153,6 @@
 						(flyspell-mode t)))
 
 ;; Dockerfile Support
-;(add-to-list 'load-path "/")
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
@@ -182,8 +178,7 @@
 (when (eq system-type 'darwin)
 	;(setq mac-option-modifier 'alt)
 	;(setq mac-command-modifier 'meta)
-	(global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-	)
+	(global-set-key [kp-delete] 'delete-char)) ;; sets fn-delete to be right-delete
 
 ;; theme
 ;(if window-system
