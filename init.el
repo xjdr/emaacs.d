@@ -179,12 +179,13 @@
 	)
 
 ;; theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
-(customize-set-variable 'frame-background-mode 'light)
-(if window-system
-		(progn
-			(load-theme 'solarized t)
-			(load "~/.emacs.d/site-lisp/mode-line-solarized-light.el"))
-  (progn
-    (load-theme 'wombat t)
-    (load "~/.emacs.d/site-lisp/mode-line.el")))
+;(if window-system
+;		(progn
+;			(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/solarized")
+;			(customize-set-variable 'frame-background-mode 'light)
+;			(load-theme 'solarized t)
+;			(load "~/.emacs.d/site-lisp/mode-line-solarized-light.el"))
+;	(progn
+		(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+    (load-theme 'ir-blackt)
+		(load "~/.emacs.d/site-lisp/mode-line.el");))
