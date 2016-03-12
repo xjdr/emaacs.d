@@ -1,4 +1,4 @@
-;;; init.el --- emacs configuration file with more pleasant defaults
+;;; init.el --- Emacs configuration file with more pleasant defaults
 ;; Copyright (C) 1999-2015 Jeff Rose
 
 ;; Author: Jeff Rose
@@ -29,6 +29,8 @@
 						 '("elpa" . "http://tromey.com/elpa/") t)
 
 (defvar xjdr/packages '(magit
+                        flycheck
+                        flycheck-google-cpplint
 												yaml-mode))
 
 (defun xjdr/packages-installed-p ()
@@ -103,10 +105,20 @@
 (add-hook 'dired-load-hook
 					(function (lambda () (load "dired-x"))))
 
-;; c++ 
+;;flycheck
+(require 'flycheck)
+(require 'flycheck-google-cpplint)
+(global-flycheck-mode)
+
+;; c++
+(custom-set-variables
+ '(flycheck-c/c++-googlelint-executable "/usr/local/bin/cpplint"))
+
+
 (defun my-c++-mode-hook ()
 	(google-set-c-style)
-	(google-make-newline-indent))
+	(google-make-newline-indent)
+  (flycheck-add-next-checker 'c/c++-gcc '(warning . c/c++-googlelint)))
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
