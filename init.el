@@ -31,6 +31,7 @@
 (defvar xjdr/packages '(magit
                         flycheck
                         flycheck-google-cpplint
+                        pyvenv
 												yaml-mode))
 
 (defun xjdr/packages-installed-p ()
@@ -66,6 +67,7 @@
 (show-paren-mode t)
 (setq backup-inhibited t)
 (setq auto-save-default nil)
+(setq compilation-read-command nil)
 
 (when (not indicate-empty-lines)
 	(toggle-indicate-empty-lines))
@@ -118,11 +120,14 @@
 (defun my-c++-mode-hook ()
 	(google-set-c-style)
 	(google-make-newline-indent)
-  (flycheck-add-next-checker 'c/c++-gcc '(warning . c/c++-googlelint)))
+  (flycheck-add-next-checker 'c/c++-clang '(warning . c/c++-googlelint)))
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
 ;; python
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i")
+
 (add-hook 'python-mode-hook
 					(lambda ()
             (setq-default indent-tabs-mode nil)
