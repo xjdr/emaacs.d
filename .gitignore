@@ -1,3 +1,4 @@
- auto-save-list/
- eshell/
- ido.last
+ido.last
+elpa/
+eshell/
+auto-save-list/
