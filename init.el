@@ -51,12 +51,6 @@
 (require 'ido)
 (ido-mode 'both)
 
-;(require 'ido-vertical-mode)
-;(ido-vertical-mode)
-
-;(require 'smex)
-;(global-set-key (kbd "M-x") 'smex)
-
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -76,14 +70,6 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'zenburn t)
 
-;; Modeline
-;(set-face-attribute 'mode-line nil
-;    :foreground "gray60" :background "gray20"
-;    :inverse-video nil
-;    :box '(:line-width 6)); :color "gray20" :style nil))
-
-;; Set up some Language Specific Stuffs
-
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell") ; could be ispell as well, depending on your preferences
 (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
@@ -91,12 +77,3 @@
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
 
-;; cmake
-; Add cmake listfile names to the mode list.
-(setq auto-mode-alist
-	  (append
-	   '(("CMakeLists\\.txt\\'" . cmake-mode))
-	   '(("\\.cmake\\'" . cmake-mode))
-	   auto-mode-alist))
-
-(autoload 'cmake-mode "/usr/local/Cellar/cmake//3.5.0/share/emacs/site-lisp/cmake/cmake-mode.el" t)
