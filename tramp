@@ -1,0 +1,32 @@
+;; -*- emacs-lisp -*- <16/03/15 19:59:11 /Users/jefrose/.emacs.d/tramp>
+;; Tramp connection history.  Don't change this file.
+;; You can delete it, forcing Tramp to reapply the checks.
+
+((["ssh" nil "fusionminlvs0.qa.paypal.com" nil nil]
+  nil)
+ (["ssh" nil "ssh" nil nil]
+  nil)
+ (["ssh" nil "fusionminlvs01.qa.paypal.com" nil nil]
+  nil)
+ (["ssh" nil "fusionminlvs0" nil nil]
+  nil)
+ (["ssh" "jr" "fusionminlvs01.qa.paypal.com" nil nil]
+  ("locale" "LC_ALL=en_US.utf8")
+  ("uname" "Linux 4.5.0-rc5-prodng+")
+  ("test" "test")
+  ("remote-path"
+   ("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin"))
+  ("remote-shell" "/bin/sh")
+  ("~" "/home/jr")
+  ("file-exists" "test -e")
+  ("ls" "/bin/ls --color=never")
+  ("ls-dired" t)
+  ("stat" "\\stat")
+  ("id" "/usr/bin/id")
+  ("gid-integer" 1002)
+  ("readlink" "\\readlink")
+  ("gid-string" "jr")
+  ("uid-integer" 1002)
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")))

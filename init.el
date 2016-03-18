@@ -9,6 +9,13 @@
 (add-to-list 'exec-path (concat (getenv "GOPATH") "/bin"))
 (require 'cl)
 
+;; load site-lisp
+(add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
+(add-hook 'after-init-hook '(lambda ()
+                              (load "~/.emacs.d/site-lisp/emacs-tile.el")
+;                              (load "~/.emacs.d/site-lisp/google-c-style.el")
+))
+
 ;; Finally, lets set up some emacs
 (setq inhibit-splash-screen t)
 (scroll-bar-mode -1)
@@ -51,6 +58,9 @@
 (require 'ido)
 (ido-mode 'both)
 
+(require 'ido-vertical-mode)
+(ido-vertical-mode)
+
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -71,9 +81,44 @@
 (load-theme 'zenburn t)
 
 ;; Org
-(setq ispell-program-name "/usr/local/bin/aspell") ; could be ispell as well, depending on your preferences
-(setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
+(setq ispell-program-name "/usr/local/bin/aspell")
+(setq ispell-dictionary "english")
 
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
+
+;; C++
+(add-hook 'c++-mode-hook 'flymake-mode)
+
+;; Java
+
+;; python
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i")
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode nil)
+            (setq-default tab-width 2)
+            (setq-default python-indent 2)
+            (tabify (point-min) (point-max))))
+
+;; D
+(require 'd-mode)
+
+;;CMake
+(require 'cmake-mode)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
