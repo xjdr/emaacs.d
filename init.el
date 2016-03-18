@@ -56,10 +56,25 @@
 (setq uniquify-buffer-name-style 'forward)
 
 (require 'ido)
-(ido-mode 'both)
+(ido-mode 1)
+(ido-everywhere 1)
 
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+(setq ido-use-faces t)
+(set-face-attribute 'ido-vertical-first-match-face nil
+                    :background nil
+                    :foreground "orange")
+(set-face-attribute 'ido-vertical-only-match-face nil
+                    :background nil
+                    :foreground nil)
+(set-face-attribute 'ido-vertical-match-face nil
+                    :foreground nil)
+
+(setq smex-save-file "~/.emacs.d/smex.save") ;; keep my ~/ clean
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
 
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -68,7 +83,6 @@
           (function (lambda () (load "dired-x"))))
 
 ;; Custom key bindings
-;(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
@@ -120,6 +134,9 @@
 
 ;; D
 (require 'd-mode)
+  (autoload 'd-mode "d-mode" "Major mode for editing D code." t)
+  (add-to-list 'auto-mode-alist '("\\.d[i]?\\'" . d-mode))
+
 
 ;;CMake
 (require 'cmake-mode)
