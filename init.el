@@ -13,8 +13,8 @@
 (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 (add-hook 'after-init-hook '(lambda ()
                               (load "~/.emacs.d/site-lisp/emacs-tile.el")
-;                              (load "~/.emacs.d/site-lisp/google-c-style.el")
-))
+                              (load "~/.emacs.d/site-lisp/google-c-style.el")
+ ))
 
 ;; Finally, lets set up some emacs
 (setq inhibit-splash-screen t)
@@ -80,6 +80,10 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'zenburn t)
 
+(when (eq system-type 'darwin)
+  (set-face-attribute 'default nil :family "Source Code Pro")
+  (set-face-attribute 'default nil :height 125))
+
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
 (setq ispell-dictionary "english")
@@ -89,8 +93,19 @@
 
 ;; C++
 (add-hook 'c++-mode-hook 'flymake-mode)
+(defun my-c++-mode-hook ()
+  (google-set-c-style)
+  (google-make-newline-indent))
 
 ;; Java
+(add-hook 'java-mode-hook
+          (lambda ()
+            "Treat Java 1.5 @-style annotations as comments."
+            (setq c-comment-start-regexp "(@|/(/|[*][*]?))")
+            (modify-syntax-entry ?@ "< b" java-mode-syntax-table)
+              (google-set-c-style)
+              (google-make-newline-indent)))
+
 
 ;; python
 (setq python-shell-interpreter "ipython"
@@ -108,17 +123,4 @@
 
 ;;CMake
 (require 'cmake-mode)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
