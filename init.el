@@ -88,7 +88,7 @@
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
-;(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -122,15 +122,10 @@
 
 
 ;; python
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i")
 
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq-default indent-tabs-mode nil)
-            (setq-default tab-width 2)
-            (setq-default python-indent 2)
-            (tabify (point-min) (point-max))))
+(setq python-shell-interpreter "/usr/local/bin/ipython"
+     python-shell-interpreter-args "-i")
+
 
 ;; D
 (require 'd-mode)
