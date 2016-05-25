@@ -1,64 +1,71 @@
-;;;Lets actually try to get better at this
+;; Lets set up some emacs
+(blink-cursor-mode 0)
+(setq initial-scratch-message nil)
+(setq inhibit-startup-message t)
 
-(setq user-full-name "Jeff Rose")
-(setq user-mail-address "jeff.rose12@gmail.com")
-
-;; Set up the env
-(setenv "PATH" (concat "/usr/texbin:/usr/local/bin:/usr/bin:/bin" (getenv "PATH")))
-(setenv "GOPATH" (concat (getenv "HOME") "/src/go"))
-(add-to-list 'exec-path (concat (getenv "GOPATH") "/bin"))
-(require 'cl)
-
-;; load site-lisp
-(add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
-(add-hook 'after-init-hook '(lambda ()
-                              (load "~/.emacs.d/site-lisp/emacs-tile.el")
-                              (load "~/.emacs.d/site-lisp/google-c-style.el")
- ))
-
-;; Finally, lets set up some emacs
-(setq inhibit-splash-screen t)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+;; Why though?
+(scroll-bar-mode 0)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
 (set-fringe-mode 0)
 (setq ring-bell-function 'ignore)
+
+(setq tramp-default-method "ssh")
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; I prefer my backups sorted elsewhere:
+(setq backup-dirctory-alist '(("." . "~/.emacs.d/backup"))
+      backup-by-copying      t  ; Don't de-link hard links
+      version-control        t  ; Use version numbers on backups
+      delete-old-versions    t  ; Automatically delete excess backups:
+      kept-new-versions      5  ; how many of the newest versions to keep
+      kept-old-versions      5) ; and how many of the old
+
+;; Use spaces, not tabs for indentation:
+(setq-default indent-tabs-mode nil)
+
+;; Show trailing whitespaces:
+(require 'whitespace)
+(setq-default show-trailing-whitespace t)
+
+;; Highlight matching parens:
+(show-paren-mode t)
+(setq show-paren-delay 0)
+(setq show-paren-style 'expression)
 
 ;; Lets get some packages
 (load "package")
 (package-initialize)
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
-             '("elpa" . "http://tromey.com/elpa/") t)
+             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-(setq tramp-default-method "ssh")
-(defalias 'yes-or-no-p 'y-or-n-p)
+; list the packages you want
+(setq package-list '(magit
+                     elpy
+                     ensime
+                     ido-vertical-mode
+                     smex
+                     ir-black-theme
+                     google-c-style))
 
-(setq backup-inhibited t)
-(setq auto-save-default nil)
-(setq make-backup-files nil)
+; fetch the list of packages available
+(unless package-archive-contents
+  (package-refresh-contents))
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 2)
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
 
-(global-font-lock-mode t)
-(setq font-lock-maximum-decoration t)
-(show-paren-mode t)
-
-(setq whitespace-style '(face trailing tabs tab-mark))
-(global-whitespace-mode)
-
-;; Configure some default emacs packages
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
-
+;; ido
 (require 'ido)
 (ido-mode 1)
 (ido-everywhere 1)
+(setq ido-enable-flex-matching t)
 
+;; ido-vertical
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -72,9 +79,10 @@
 (set-face-attribute 'ido-vertical-match-face nil
                     :foreground nil)
 
-(setq smex-save-file "~/.emacs.d/smex.save") ;; keep my ~/ clean
+;; smex
 (require 'smex)
 (global-set-key (kbd "M-x") 'smex)
+(setq smex-save-file "~/.emacs.d/smex.save") ;; keep my ~/ clean
 
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -89,14 +97,9 @@
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x g") 'magit-status)
-
-;; Theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'zenburn t)
-
-(when (eq system-type 'darwin)
-  (set-face-attribute 'default nil :family "Source Code Pro")
-  (set-face-attribute 'default nil :height 125))
+(global-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
+(global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
+(global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
 
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
@@ -112,27 +115,26 @@
   (google-make-newline-indent))
 
 ;; Java
+(require 'ensime)
 (add-hook 'java-mode-hook
           (lambda ()
-            "Treat Java 1.5 @-style annotations as comments."
-            (setq c-comment-start-regexp "(@|/(/|[*][*]?))")
-            (modify-syntax-entry ?@ "< b" java-mode-syntax-table)
-              (google-set-c-style)
-              (google-make-newline-indent)))
-
+            (setq show-trailing-whitespace t)
+            (show-paren-mode)
+            (prettify-symbols-mode)
+            (eldoc-mode)
+            (flycheck-mode)
+            (yas-minor-mode)
+            (company-mode)
+            (smartparens-strict-mode)
+            (rainbow-delimiters-mode)))
+(add-hook 'java-mode-hook 'ensime-mode)
 
 ;; python
-
 (setq python-shell-interpreter "/usr/local/bin/ipython"
      python-shell-interpreter-args "-i")
+(elpy-enable)
+(setq elpy-rpc-python-command "/usr/local/bin/python")
 
-
-;; D
-(require 'd-mode)
-  (autoload 'd-mode "d-mode" "Major mode for editing D code." t)
-  (add-to-list 'auto-mode-alist '("\\.d[i]?\\'" . d-mode))
-
-
-;;CMake
-(require 'cmake-mode)
+;; Themes to make me look beautiful
+(load-theme 'ir-black t)
 
