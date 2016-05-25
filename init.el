@@ -90,12 +90,19 @@
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
 
+;; Ansi Term
+(defvar my-term-shell "/usr/local/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
+(ad-activate 'ansi-term)
+
 ;; Custom key bindings
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-x t") 'ansi-term)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
