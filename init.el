@@ -108,6 +108,16 @@
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
 
+;; window navigation keys
+(global-set-key "\C-ch" 'windmove-left)
+(global-set-key "\C-c\C-h" 'windmove-left)
+(global-set-key "\C-cj" 'windmove-down)
+(global-set-key "\C-c\C-j" 'windmove-down)
+(global-set-key "\C-ck" 'windmove-up)
+(global-set-key "\C-c\C-k" 'windmove-up)
+(global-set-key "\C-cl" 'windmove-right)
+(global-set-key "\C-c\C-l" 'windmove-right)
+
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
 (setq ispell-dictionary "english")
