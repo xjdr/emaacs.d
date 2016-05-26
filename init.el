@@ -41,6 +41,9 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+;; uncomment the next line if the package cache is corrupt
+;;(package-refresh-contents)
+(package-initialize)
 
 (package-initialize)
 
