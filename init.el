@@ -3,7 +3,7 @@
 (setq initial-scratch-message nil)
 (setq inhibit-startup-message t)
 
-;; Why though?
+;; Why
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -14,12 +14,22 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; I prefer my backups sorted elsewhere:
-(setq backup-dirctory-alist '(("." . "~/.emacs.d/backup"))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
       backup-by-copying      t  ; Don't de-link hard links
       version-control        t  ; Use version numbers on backups
       delete-old-versions    t  ; Automatically delete excess backups:
       kept-new-versions      5  ; how many of the newest versions to keep
       kept-old-versions      5) ; and how many of the old
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
+
+This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
 
 ;; Use spaces, not tabs for indentation:
 (setq-default indent-tabs-mode nil)
@@ -28,18 +38,19 @@
 (require 'whitespace)
 (setq-default show-trailing-whitespace t)
 
-;; Highlight matching parens:
-(show-paren-mode t)
-(setq show-paren-delay 0)
-(setq show-paren-style 'expression)
+;; ;; Highlight matching parens:
+;; (show-paren-mode t)
+;; (setq show-paren-delay 0)
+;; (setq show-paren-style 'expression)
 
 ;; Lets get some packages
 (load "package")
-(package-initialize)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+
+(package-initialize)
 
 ; list the packages you want
 (setq package-list '(magit
@@ -63,7 +74,6 @@
 (require 'ido)
 (ido-mode 1)
 (ido-everywhere 1)
-(setq ido-enable-flex-matching t)
 
 ;; ido-vertical
 (require 'ido-vertical-mode)
@@ -72,7 +82,7 @@
 (setq ido-use-faces t)
 (set-face-attribute 'ido-vertical-first-match-face nil
                     :background nil
-                    :foreground "orange")
+                    :foreground "green")
 (set-face-attribute 'ido-vertical-only-match-face nil
                     :background nil
                     :foreground nil)
@@ -107,6 +117,16 @@
 (global-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
+
+;; window navigation keys
+(global-set-key "\C-ch" 'windmove-left)
+(global-set-key "\C-c\C-h" 'windmove-left)
+(global-set-key "\C-cj" 'windmove-down)
+(global-set-key "\C-c\C-j" 'windmove-down)
+(global-set-key "\C-ck" 'windmove-up)
+(global-set-key "\C-c\C-k" 'windmove-up)
+(global-set-key "\C-cl" 'windmove-right)
+(global-set-key "\C-c\C-l" 'windmove-right)
 
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
@@ -144,4 +164,22 @@
 
 ;; Themes to make me look beautiful
 (load-theme 'ir-black t)
+
+(defun contextual-backspace ()
+  "Hungry whitespace or delete word depending on context."
+  (interactive)
+  (if (looking-back "[[:space:]\n]\\{2,\\}" (- (point) 2))
+      (while (looking-back "[[:space:]\n]" (- (point) 1))
+        (delete-char -1))
+    (cond
+     ((and (boundp 'smartparens-strict-mode)
+           smartparens-strict-mode)
+      (sp-backward-kill-word 1))
+     ((and (boundp 'subword-mode)
+           subword-mode)
+      (subword-backward-kill 1))
+     (t
+      (backward-kill-word 1)))))
+
+(global-set-key (kbd "C-<backspace>") 'contextual-backspace)
 
