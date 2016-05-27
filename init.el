@@ -49,6 +49,7 @@
 
 ; list the packages you want
 (setq package-list '(magit
+                     editorconfig
                      elpy
                      ido-vertical-mode
                      smex
@@ -131,6 +132,7 @@
             (flymake-mode)
             (show-paren-mode)
             (prettify-symbols-mode)
+            (editorconfig-mode)
             (rainbow-delimiters-mode)))
 
 ;; Python
