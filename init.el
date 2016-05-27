@@ -21,15 +21,8 @@
       kept-new-versions      5  ; how many of the newest versions to keep
       kept-old-versions      5) ; and how many of the old
 
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
-
-This is particularly useful under Mac OSX, where GUI apps are not started from a shell."
-  (interactive)
-  (let ((path-from-shell (replace-regexp-in-string "[ \t\n]*$" "" (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
 ;; Use spaces, not tabs for indentation:
 (setq-default indent-tabs-mode nil)
@@ -37,11 +30,10 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ;; Show trailing whitespaces:
 (require 'whitespace)
 (setq-default show-trailing-whitespace t)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
-;; ;; Highlight matching parens:
-;; (show-paren-mode t)
-;; (setq show-paren-delay 0)
-;; (setq show-paren-style 'expression)
+;; Highlight matching parens:
+(show-paren-mode t)
 
 ;; Lets get some packages
 (load "package")
@@ -55,7 +47,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 ; list the packages you want
 (setq package-list '(magit
                      elpy
-                     ensime
                      ido-vertical-mode
                      smex
                      ir-black-theme
@@ -118,16 +109,6 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
 (global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
 
-;; window navigation keys
-(global-set-key "\C-ch" 'windmove-left)
-(global-set-key "\C-c\C-h" 'windmove-left)
-(global-set-key "\C-cj" 'windmove-down)
-(global-set-key "\C-c\C-j" 'windmove-down)
-(global-set-key "\C-ck" 'windmove-up)
-(global-set-key "\C-c\C-k" 'windmove-up)
-(global-set-key "\C-cl" 'windmove-right)
-(global-set-key "\C-c\C-l" 'windmove-right)
-
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
 (setq ispell-dictionary "english")
@@ -142,25 +123,19 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
   (google-make-newline-indent))
 
 ;; Java
-(require 'ensime)
 (add-hook 'java-mode-hook
           (lambda ()
-            (setq show-trailing-whitespace t)
+            (flymake-mode)
             (show-paren-mode)
             (prettify-symbols-mode)
-            (eldoc-mode)
-            (flycheck-mode)
-            (yas-minor-mode)
-            (company-mode)
-            (smartparens-strict-mode)
             (rainbow-delimiters-mode)))
-(add-hook 'java-mode-hook 'ensime-mode)
 
-;; python
+;; Python
 (setq python-shell-interpreter "/usr/local/bin/ipython"
      python-shell-interpreter-args "-i")
 (elpy-enable)
 (setq elpy-rpc-python-command "/usr/local/bin/python")
+(add-hook 'python-mode-hook 'flymake-mode)
 
 ;; Themes to make me look beautiful
 (load-theme 'ir-black t)
@@ -182,4 +157,3 @@ This is particularly useful under Mac OSX, where GUI apps are not started from a
       (backward-kill-word 1)))))
 
 (global-set-key (kbd "C-<backspace>") 'contextual-backspace)
-
