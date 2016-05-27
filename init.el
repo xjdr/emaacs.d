@@ -15,11 +15,11 @@
 
 ;; I prefer my backups sorted elsewhere:
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-      backup-by-copying      t  ; Don't de-link hard links
-      version-control        t  ; Use version numbers on backups
-      delete-old-versions    t  ; Automatically delete excess backups:
-      kept-new-versions      5  ; how many of the newest versions to keep
-      kept-old-versions      5) ; and how many of the old
+      backup-by-copying       t  ; Don't de-link hard links
+      version-control         t  ; Use version numbers on backups
+      delete-old-versions     t  ; Automatically delete excess backups:
+      kept-new-versions       5  ; how many of the newest versions to keep
+      kept-old-versions       5) ; and how many of the old
 
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -41,11 +41,15 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+;; uncomment the next line if the package cache is corrupt
+;;(package-refresh-contents)
+(package-initialize)
 
 (package-initialize)
 
 ; list the packages you want
 (setq package-list '(magit
+                     editorconfig
                      elpy
                      ido-vertical-mode
                      smex
@@ -128,6 +132,7 @@
             (flymake-mode)
             (show-paren-mode)
             (prettify-symbols-mode)
+            (editorconfig-mode)
             (rainbow-delimiters-mode)))
 
 ;; Python
