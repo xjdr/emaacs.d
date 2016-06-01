@@ -41,16 +41,14 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+
 ;; uncomment the next line if the package cache is corrupt
 ;;(package-refresh-contents)
-(package-initialize)
-
 (package-initialize)
 
 ; list the packages you want
 (setq package-list '(magit
                      editorconfig
-                     elpy
                      ido-vertical-mode
                      smex
                      ir-black-theme
@@ -68,7 +66,7 @@
 ;; ido
 (require 'ido)
 (ido-mode 1)
-(ido-everywhere 1)
+;(ido-everywhere 1)
 
 ;; ido-vertical
 (require 'ido-vertical-mode)
@@ -92,6 +90,7 @@
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
+(require 'dired-x)
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
 
@@ -109,9 +108,19 @@
 (global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x t") 'ansi-term)
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-c C-d") 'flymake-display-err-menu-for-current-line)
-(global-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
-(global-set-key (kbd "C-c C-p") 'flymake-goto-prev-error)
+(global-set-key (kbd "C-x c e") 'flymake-display-err-menu-for-current-line)
+(global-set-key (kbd "C-x c n") 'flymake-goto-next-error)
+(global-set-key (kbd "C-x c p") 'flymake-goto-prev-error)
+
+;; window navigation keys
+(global-set-key "\C-ch" 'windmove-left)
+(global-set-key "\C-c\C-h" 'windmove-left)
+(global-set-key "\C-cj" 'windmove-down)
+(global-set-key "\C-c\C-j" 'windmove-down)
+(global-set-key "\C-ck" 'windmove-up)
+(global-set-key "\C-c\C-k" 'windmove-up)
+(global-set-key "\C-cl" 'windmove-right)
+(global-set-key "\C-c\C-l" 'windmove-right)
 
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
@@ -130,35 +139,12 @@
 (add-hook 'java-mode-hook
           (lambda ()
             (flymake-mode)
-            (show-paren-mode)
-            (prettify-symbols-mode)
-            (editorconfig-mode)
-            (rainbow-delimiters-mode)))
+            (editorconfig-mode)))
 
 ;; Python
 (setq python-shell-interpreter "/usr/local/bin/ipython"
      python-shell-interpreter-args "-i")
-(elpy-enable)
-(setq elpy-rpc-python-command "/usr/local/bin/python")
 (add-hook 'python-mode-hook 'flymake-mode)
 
 ;; Themes to make me look beautiful
 (load-theme 'ir-black t)
-
-(defun contextual-backspace ()
-  "Hungry whitespace or delete word depending on context."
-  (interactive)
-  (if (looking-back "[[:space:]\n]\\{2,\\}" (- (point) 2))
-      (while (looking-back "[[:space:]\n]" (- (point) 1))
-        (delete-char -1))
-    (cond
-     ((and (boundp 'smartparens-strict-mode)
-           smartparens-strict-mode)
-      (sp-backward-kill-word 1))
-     ((and (boundp 'subword-mode)
-           subword-mode)
-      (subword-backward-kill 1))
-     (t
-      (backward-kill-word 1)))))
-
-(global-set-key (kbd "C-<backspace>") 'contextual-backspace)
