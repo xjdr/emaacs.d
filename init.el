@@ -13,13 +13,11 @@
 (setq tramp-default-method "ssh")
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; I prefer my backups sorted elsewhere:
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-      backup-by-copying       t  ; Don't de-link hard links
-      version-control         t  ; Use version numbers on backups
-      delete-old-versions     t  ; Automatically delete excess backups:
-      kept-new-versions       5  ; how many of the newest versions to keep
-      kept-old-versions       5) ; and how many of the old
+;; Keep ya backups out my dirs
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -66,7 +64,6 @@
 ;; ido
 (require 'ido)
 (ido-mode 1)
-;(ido-everywhere 1)
 
 ;; ido-vertical
 (require 'ido-vertical-mode)
