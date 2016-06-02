@@ -124,10 +124,15 @@
 (add-hook 'org-mode-hook 'flyspell-buffer)
 
 ;; C++
-(add-hook 'c++-mode-hook 'flymake-mode)
 (defun my-c++-mode-hook ()
   (google-set-c-style)
   (google-make-newline-indent))
+
+(add-hook 'c++-mode-hook
+           (lambda ()
+             (flymake-mode)
+             (my-c++-mode-hook)
+            (editorconfig-mode)))
 
 ;; Java
 (add-hook 'java-mode-hook
@@ -138,7 +143,10 @@
 ;; Python
 (setq python-shell-interpreter "/usr/local/bin/ipython"
      python-shell-interpreter-args "-i")
-(add-hook 'python-mode-hook 'flymake-mode)
+(add-hook 'python-mode-hook
+                    (lambda ()
+            (flymake-mode)
+            (editorconfig-mode)))
 
 ;; Theme?
 (custom-set-faces
