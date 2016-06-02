@@ -45,12 +45,10 @@
 (package-initialize)
 
 ; list the packages you want
-(setq package-list '(magit
+(setq package-list '(smex
                      editorconfig
-                     ido-vertical-mode
-                     smex
-                     ir-black-theme
-                     google-c-style))
+                     google-c-style
+                     ido-vertical-mode))
 
 ; fetch the list of packages available
 (unless package-archive-contents
@@ -104,7 +102,6 @@
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x t") 'ansi-term)
-(global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x c e") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "C-x c n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-x c p") 'flymake-goto-prev-error)
@@ -143,5 +140,17 @@
      python-shell-interpreter-args "-i")
 (add-hook 'python-mode-hook 'flymake-mode)
 
-;; Themes to make me look beautiful
-(load-theme 'ir-black t)
+;; Theme?
+(custom-set-faces
+ '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White"))))   ;  :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
+ '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
+ '(region ((nil (:background "#255255"))))
+ '(hl-line ((nil (:background "#222222"))))
+ '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
+ '(show-paren-match ((nil (:background "#1793d0"))))
+ '(show-paren-mismatch((((class color)) (:background "red")))))
+
+(set-face-attribute 'mode-line nil
+   :foreground "#1793d0"
+   :background "#111111"
+   :box '(:line-width 6 :color "#111111" :style nil))
