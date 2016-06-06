@@ -138,6 +138,7 @@
 (add-hook 'java-mode-hook
           (lambda ()
             (flymake-mode)
+            (subword-mode)
             (editorconfig-mode)))
 
 ;; Python
