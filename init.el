@@ -137,6 +137,7 @@
 ;; Java
 (add-hook 'java-mode-hook
           (lambda ()
+            (set (make-local-variable 'compilation-environment (list (concat "FILE_NAME=" (buffer-file-name)))))
             (flymake-mode)
             (subword-mode)
             (editorconfig-mode)))
@@ -151,7 +152,7 @@
 
 ;; Theme?
 (custom-set-faces
- '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White"))))   ;  :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
+ '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White"))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
  '(region ((nil (:background "#255255"))))
  '(hl-line ((nil (:background "#222222"))))
