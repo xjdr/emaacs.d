@@ -170,3 +170,6 @@
    :foreground "#1793d0"
    :background "#111111"
    :box '(:line-width 6 :color "#111111" :style nil))
+
+(if (file-exists-p "custom.el")
+    (load "custom.el"))
