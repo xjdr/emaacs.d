@@ -40,24 +40,22 @@
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-;; uncomment the next line if the package cache is corrupt
-;;(package-refresh-contents)
 (package-initialize)
 
-; list the packages you want
-(setq package-list '(smex
-                     editorconfig
-                     google-c-style
-                     ido-vertical-mode))
+(defun xjdr-bootstrap-packages ()
+  (package-refresh-contents)
+  (let ((package-list '(smex
+                        editorconfig
+                        google-c-style
+                        ido-vertical-mode
+                        whole-line-or-region)))
+    (dolist (list-item package-list)
+      (unless (package-installed-p list-item)
+        (package-install list-item)))))
 
-; fetch the list of packages available
+; bootstrap packages
 (unless package-archive-contents
-  (package-refresh-contents))
-
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+  (xjdr-bootstrap-packages))
 
 ;; ido
 (require 'ido)
@@ -94,6 +92,9 @@
 (defadvice ansi-term (before force-bash)
   (interactive (list my-term-shell)))
 (ad-activate 'ansi-term)
+(add-hook 'term-mode-hook
+  (lambda()
+    (setq-local show-trailing-whitespace nil)))
 
 ;; Custom key bindings
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
@@ -122,6 +123,11 @@
 
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
+
+;; Flymake
+(defun flymake-display-warning (warning)
+  "Display a warning to the user, using lwarn"
+  (message warning))
 
 ;; C++
 (defun my-c++-mode-hook ()
@@ -164,3 +170,6 @@
    :foreground "#1793d0"
    :background "#111111"
    :box '(:line-width 6 :color "#111111" :style nil))
+
+(if (file-exists-p "custom.el")
+    (load "custom.el"))
