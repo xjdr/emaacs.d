@@ -124,6 +124,11 @@
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
 
+;; Flymake
+(defun flymake-display-warning (warning)
+  "Display a warning to the user, using lwarn"
+  (message warning))
+
 ;; C++
 (defun my-c++-mode-hook ()
   (google-set-c-style)
