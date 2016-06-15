@@ -121,6 +121,13 @@
 (setq ispell-program-name "/usr/local/bin/aspell")
 (setq ispell-dictionary "english")
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ditaa . t)))
+
+(custom-set-variables
+ '(org-ditaa-jar-path "/usr/local/Cellar/ditaa/0.9/libexec/ditaa0_9.jar"))
+
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
 
@@ -159,12 +166,12 @@
 ;; Theme?
 (custom-set-faces
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White"))))
- '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
- '(region ((nil (:background "#255255"))))
- '(hl-line ((nil (:background "#222222"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
+ '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
+ '(hl-line ((nil (:background "#222222"))))
+ '(region ((nil (:background "#255255"))))
  '(show-paren-match ((nil (:background "#1793d0"))))
- '(show-paren-mismatch((((class color)) (:background "red")))))
+ '(show-paren-mismatch ((((class color)) (:background "red")))))
 
 (set-face-attribute 'mode-line nil
    :foreground "#1793d0"
@@ -173,3 +180,7 @@
 
 (if (file-exists-p "custom.el")
     (load "custom.el"))
+(set-face-attribute 'mode-line-inactive nil
+   :foreground "#1793d0"
+   :background "#222222"
+   :box '(:line-width 6 :color "#22222" :style nil))
