@@ -92,6 +92,9 @@
 (defadvice ansi-term (before force-bash)
   (interactive (list my-term-shell)))
 (ad-activate 'ansi-term)
+(add-hook 'term-mode-hook
+  (lambda()
+    (setq-local show-trailing-whitespace nil)))
 
 ;; Custom key bindings
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
