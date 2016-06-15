@@ -40,24 +40,22 @@
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-;; uncomment the next line if the package cache is corrupt
-;;(package-refresh-contents)
 (package-initialize)
 
-; list the packages you want
-(setq package-list '(smex
-                     editorconfig
-                     google-c-style
-                     ido-vertical-mode))
+(defun xjdr-bootstrap-packages ()
+  (package-refresh-contents)
+  (let ((package-list '(smex
+                        editorconfig
+                        google-c-style
+                        ido-vertical-mode
+                        whole-line-or-region)))
+    (dolist (list-item package-list)
+      (unless (package-installed-p list-item)
+        (package-install list-item)))))
 
-; fetch the list of packages available
+; bootstrap packages
 (unless package-archive-contents
-  (package-refresh-contents))
-
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+  (xjdr-bootstrap-packages))
 
 ;; ido
 (require 'ido)
