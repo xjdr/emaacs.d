@@ -150,9 +150,11 @@
             (editorconfig-mode)))
 
 ;; Java
+(setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
-            (set (make-local-variable 'compilation-environment (list (concat "FILE_NAME=" (buffer-file-name)))))
+            (setq-local compilation-environment (list
+              (concat "FILE_NAME=" (buffer-file-name))))
             (flymake-mode)
             (subword-mode)
             (editorconfig-mode)))
@@ -188,8 +190,10 @@
 (require 'org)
 (org-babel-load-file (expand-file-name "org-init/emacs-cheatsheet.org" user-emacs-directory))
 
-(if (file-exists-p "custom.el")
-    (load "custom.el"))
+(let ((custom-file (expand-file-name "custom.el" user-emacs-directory)))
+  (if (file-exists-p custom-file)
+    (load custom-file)))
+
 (set-face-attribute 'mode-line-inactive nil
    :foreground "#1793d0"
    :background "#222222"
