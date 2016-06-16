@@ -44,10 +44,12 @@
 
 (defun xjdr-bootstrap-packages ()
   (package-refresh-contents)
-  (let ((package-list '(smex
+  (let ((package-list '(
+                        cheatsheet
                         editorconfig
                         google-c-style
                         ido-vertical-mode
+                        smex
                         whole-line-or-region)))
     (dolist (list-item package-list)
       (unless (package-installed-p list-item)
@@ -170,6 +172,14 @@
    :foreground "#1793d0"
    :background "#111111"
    :box '(:line-width 6 :color "#111111" :style nil))
+
+;; Info
+(add-hook 'Info-mode-hook		; After Info-mode has started
+  (lambda ()
+    (add-to-list 'Info-additional-directory-list "~/.emacs.d/info")))
+
+(require 'org)
+(org-babel-load-file (expand-file-name "org-init/emacs-cheatsheet.org" user-emacs-directory))
 
 (if (file-exists-p "custom.el")
     (load "custom.el"))

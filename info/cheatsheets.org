@@ -1,0 +1,160 @@
+#+TEXINFO_DIR_CATEGORY: cheatsheets
+#+TEXINFO_DIR_DESC: cheatsheets for non emacs things
+#+TEXINFO_DIR_TITLE: Cheatsheets: (cheatsheets)
+
+* cheatsheets
+
+** junit annotations
+
+*** github search
+
+This Github search (`@interface`) gives you the list of all the annotations :
+
+https://github.com/junit-team/junit/search?q=%22%40interface%22&type=Code
+
+*** Basic Annotations
+    - =@Test= [fn:test]
+    - =@Before= [fn:before]
+    - =@After= [fn:after]
+    - =@AfterClass= [fn:afterclass]
+    - =@BeforeClass= [fn:beforeclass]
+    - =@Ignore= [fn:ignore]
+    - =@Runwith= [fn:runwith]
+
+*** Parameterized Tests
+
+For Parameterized tests use =@Parameters= and =@RunWith(Parameterized.class)=
+https://github.com/junit-team/junit/wiki/Parameterized-tests
+
+*** Category
+
+=@Category= [fn:category]
+Grouping tests into categories. e.g. Fast, Slow etc.
+
+https://github.com/junit-team/junit/wiki/Categories
+
+=@IncludeCategory= [fn:categories]
+Runs only the classes and methods that are
+annotated with either the category given with the =@IncludeCategory=
+annotation, or a subtype of that category.
+
+=@ExcludeCategory= [fn:categories]
+Inverse of =@IncludeCategory=
+
+*** Rules
+
+=@Rule= [fn:rule]
+
+Rules allow very flexible addition or redefinition of the behavior of
+each test method in a test class. e.g. Creating a Temp Folder rule for
+creating a temp folder while running tests.
+
+https://github.com/junit-team/junit/wiki/Rules
+
+*** Theory and related annotations
+
+=@Theory= [fn:theory]
+Theories give more flexible and expressive assertions
+
+https://github.com/junit-team/junit/wiki/Theories
+
+=@DataPoint= [fn:datapoint]
+Annotating an field or method with =@DataPoint= will cause the field value
+or the value returned by the method to be used as a potential parameter for
+theories in that class
+
+=@DataPoints= [fn:datapoints]
+
+Extension of =@Datapoint=
+Annotating an array or iterable-typed field or method with =@DataPoints=
+will cause the values in the array or iterable given to be used as potential
+parameters for theories in that class
+
+=@FromDataPoints= [fn:fromdatapoints]
+
+Annotating a parameter of a =@Theory= method with =@FromDataPoints= will limit the
+datapoints considered as potential values for that parameter to just the
+=@DataPoints= with the given name
+
+=@ParametersSuppliedBy= [fn:parameterssuppliedby]
+Annotating a =@Theory= method parameter with =@ParametersSuppliedBy= causes it to be supplied with
+values from the named =ParameterSupplier= when run as a theory
+
+=@TestedOn= [fn:testedon]
+
+The =@TestedOn= annotation takes an array of values to be used as data points for the annotated
+parameter.
+
+e.g.
+
+#+begin_src java
+    @Theory
+    public void multiplyIsInverseOfDivideWithInlineDataPoints(
+            @TestedOn(ints = {0, 5, 10}) int amount,
+            @TestedOn(ints = {0, 1, 2}) int m
+    ) {
+        assumeThat(m, not(0));
+        assertThat(new Dollar(amount).times(m).divideBy(m).getAmount(), is(amount));
+    }
+#+end_src
+
+
+** javadoc annotations
+
+https://en.wikipedia.org/wiki/Javadoc
+
+| Tag & Parameter                      | Usage                                                            | Applies to                            | Since |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@author= /John Smith/               | Describes an author.                                             | Class, Interface, Enum                |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@version= /version/                 | Provides software version entry. Max one per Class or Interface. | Class, Interface, Enum                |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@since= /since-text/                | Describes when this functionality has first existed.             | Class, Interface, Enum, Field, Method |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@see= /reference/                   | Provides a link to other element of documentation.               | Class, Interface, Enum, Field, Method |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@param= /name description/          | Describes a method parameter.                                    | Method                                |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@return= /description/              | Describes the return value.                                      | Method                                |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@exception= /classname description/ | Describes an exception that may be thrown from this method.      | Method                                |       |
+| =@throws= /classname description/    |                                                                  |                                       |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@deprecated= /description/          | Describes an outdated method.                                    | Class, Interface, Enum, Field, Method |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@inheritDoc=                        | Copies the description from the overridden method.               | Overriding Method                     | 1.4.0 |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@link= /reference/                  | Link to other symbol.                                            | Class, Interface, Enum, Field, Method |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@value= /#STATIC_FIELD/             | Return the value of a static field.                              | Static Field                          | 1.4.0 |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@code= /literal/                    | Formats literal text in the code font. It                        | Class, Interface, Enum, Field, Method | 1.5.0 |
+|                                      | is equivalent to <code>{@literal}</code>.                        |                                       |       |
+|--------------------------------------+------------------------------------------------------------------+---------------------------------------+-------|
+| =@literal= /literal/                 | Denotes literal text. The enclosed text is interpreted           | Class, Interface, Enum, Field, Method | 1.5.0 |
+|                                      | as not containing HTML markup or nested javadoc tags.            |                                       |       |
+
+** install texinfo
+
+#+begin_src shell
+install-info --info-dir=${HOME}/.emacs.d/info ~/.emacs.d/info/cheatsheets.info
+#+end_src
+
+* Footnotes
+
+[fn:test] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Test.java
+[fn:before] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Before.java
+[fn:after] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/After.java
+[fn:afterclass] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/AfterClass.java
+[fn:beforeclass] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/BeforeClass.java
+[fn:ignore] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Ignore.java
+[fn:runwith] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/runner/RunWith.java
+[fn:category] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Category.java
+[fn:categories] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Categories.java
+[fn:rule] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Rule.java
+[fn:theory] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/Theory.java
+[fn:datapoint] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/DataPoint.java
+[fn:datapoints] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/DataPoints.java
+[fn:fromdatapoints] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/FromDataPoints.java
+[fn:parameterssuppliedby] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/ParametersSuppliedBy.java
+[fn:testedon] https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/suppliers/TestedOn.java

@@ -1,0 +1,307 @@
+This is ./cheatsheets.info, produced by makeinfo version 4.8 from
+/Users/pdex/projects/paypal/emacs.d/info/cheatsheets.texi.
+
+INFO-DIR-SECTION cheatsheets
+START-INFO-DIR-ENTRY
+* Cheatsheets: (cheatsheets). cheatsheets for non emacs things.
+END-INFO-DIR-ENTRY
+
+
+File: cheatsheets.info,  Node: Top,  Next: cheatsheets,  Up: (dir)
+
+cheatsheets
+***********
+
+* Menu:
+
+* cheatsheets::
+
+--- The Detailed Node Listing ---
+
+cheatsheets
+
+* junit annotations::
+* javadoc annotations::
+* install texinfo::
+
+junit annotations
+
+* github search::
+* Basic Annotations::
+* Parameterized Tests::
+* Category::
+* Rules::
+* Theory and related annotations::
+
+
+File: cheatsheets.info,  Node: cheatsheets,  Prev: Top,  Up: Top
+
+1 cheatsheets
+*************
+
+* Menu:
+
+* junit annotations::
+* javadoc annotations::
+* install texinfo::
+
+
+File: cheatsheets.info,  Node: junit annotations,  Next: javadoc annotations,  Up: cheatsheets
+
+1.1 junit annotations
+=====================
+
+* Menu:
+
+* github search::
+* Basic Annotations::
+* Parameterized Tests::
+* Category::
+* Rules::
+* Theory and related annotations::
+
+
+File: cheatsheets.info,  Node: github search,  Next: Basic Annotations,  Up: junit annotations
+
+1.1.1 github search
+-------------------
+
+This Github search (`@interface`) gives you the list of all the
+annotations :
+
+`https://github.com/junit-team/junit/search?q=%22%40interface%22&type=Code'
+
+
+File: cheatsheets.info,  Node: Basic Annotations,  Next: Parameterized Tests,  Prev: github search,  Up: junit annotations
+
+1.1.2 Basic Annotations
+-----------------------
+
+   * @Test (1)
+
+   * @Before (2)
+
+   * @After (3)
+
+   * @AfterClass (4)
+
+   * @BeforeClass (5)
+
+   * @Ignore (6)
+
+   * @Runwith (7)
+
+   ---------- Footnotes ----------
+
+   (1)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Test.java'
+
+   (2)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Before.java'
+
+   (3)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/After.java'
+
+   (4)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/AfterClass.java'
+
+   (5)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/BeforeClass.java'
+
+   (6)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Ignore.java'
+
+   (7)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/runner/RunWith.java'
+
+
+File: cheatsheets.info,  Node: Parameterized Tests,  Next: Category,  Prev: Basic Annotations,  Up: junit annotations
+
+1.1.3 Parameterized Tests
+-------------------------
+
+For Parameterized tests use @Parameters and
+@RunWith(Parameterized.class)
+`https://github.com/junit-team/junit/wiki/Parameterized-tests'
+
+
+File: cheatsheets.info,  Node: Category,  Next: Rules,  Prev: Parameterized Tests,  Up: junit annotations
+
+1.1.4 Category
+--------------
+
+@Category (1) Grouping tests into categories. e.g. Fast, Slow etc.
+
+   `https://github.com/junit-team/junit/wiki/Categories'
+
+   @IncludeCategory (2) Runs only the classes and methods that are
+annotated with either the category given with the @IncludeCategory
+annotation, or a subtype of that category.
+
+   @ExcludeCategory (3) Inverse of @IncludeCategory
+
+   ---------- Footnotes ----------
+
+   (1)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Category.java'
+
+   (2)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Categories.java'
+
+   (3)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Categories.java'
+
+
+File: cheatsheets.info,  Node: Rules,  Next: Theory and related annotations,  Prev: Category,  Up: junit annotations
+
+1.1.5 Rules
+-----------
+
+@Rule (1)
+
+   Rules allow very flexible addition or redefinition of the behavior of
+each test method in a test class. e.g. Creating a Temp Folder rule for
+creating a temp folder while running tests.
+
+   `https://github.com/junit-team/junit/wiki/Rules'
+
+   ---------- Footnotes ----------
+
+   (1)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/Rule.java'
+
+
+File: cheatsheets.info,  Node: Theory and related annotations,  Prev: Rules,  Up: junit annotations
+
+1.1.6 Theory and related annotations
+------------------------------------
+
+@Theory (1) Theories give more flexible and expressive assertions
+
+   `https://github.com/junit-team/junit/wiki/Theories'
+
+   @DataPoint (2) Annotating an field or method with @DataPoint will
+cause the field value or the value returned by the method to be used as
+a potential parameter for theories in that class
+
+   @DataPoints (3)
+
+   Extension of @Datapoint Annotating an array or iterable-typed field
+or method with @DataPoints will cause the values in the array or
+iterable given to be used as potential parameters for theories in that
+class
+
+   @FromDataPoints (4)
+
+   Annotating a parameter of a @Theory method with @FromDataPoints will
+limit the datapoints considered as potential values for that parameter
+to just the @DataPoints with the given name
+
+   @ParametersSuppliedBy (5) Annotating a @Theory method parameter with
+@ParametersSuppliedBy causes it to be supplied with values from the
+named ParameterSupplier when run as a theory
+
+   @TestedOn (6)
+
+   The @TestedOn annotation takes an array of values to be used as data
+points for the annotated parameter.
+
+   e.g.
+
+     @Theory
+     public void multiplyIsInverseOfDivideWithInlineDataPoints(
+             @TestedOn(ints = {0, 5, 10}) int amount,
+             @TestedOn(ints = {0, 1, 2}) int m
+     ) {
+         assumeThat(m, not(0));
+         assertThat(new Dollar(amount).times(m).divideBy(m).getAmount(), is(amount));
+     }
+
+   ---------- Footnotes ----------
+
+   (1)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/Theory.java'
+
+   (2)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/DataPoint.java'
+
+   (3)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/DataPoints.java'
+
+   (4)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/FromDataPoints.java'
+
+   (5)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/ParametersSuppliedBy.java'
+
+   (6)
+`https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/theories/suppliers/TestedOn.java'
+
+
+File: cheatsheets.info,  Node: javadoc annotations,  Next: install texinfo,  Prev: junit annotations,  Up: cheatsheets
+
+1.2 javadoc annotations
+=======================
+
+`https://en.wikipedia.org/wiki/Javadoc'
+
+Tag & Parameter                        Usage                                                              Applies to                              Since
+---------------------------------------------------------------------------------------------------------------------------------------------------------- 
+@author _John Smith_                   Describes an author.                                               Class, Interface, Enum                  
+@version _version_                     Provides software version entry. Max one per Class or Interface.   Class, Interface, Enum                  
+@since _since-text_                    Describes when this functionality has first existed.               Class, Interface, Enum, Field, Method   
+@see _reference_                       Provides a link to other element of documentation.                 Class, Interface, Enum, Field, Method   
+@param _name description_              Describes a method parameter.                                      Method                                  
+@return _description_                  Describes the return value.                                        Method                                  
+@exception _classname description_     Describes an exception that may be thrown from this method.        Method                                  
+@throws _classname description_                                                                                                                   
+@deprecated _description_              Describes an outdated method.                                      Class, Interface, Enum, Field, Method   
+@inheritDoc                            Copies the description from the overridden method.                 Overriding Method                       1.4.0
+@link _reference_                      Link to other symbol.                                              Class, Interface, Enum, Field, Method   
+@value _#STATIC_FIELD_                 Return the value of a static field.                                Static Field                            1.4.0
+@code _literal_                        Formats literal text in the code font. It                          Class, Interface, Enum, Field, Method   1.5.0
+                                       is equivalent to <code>{@literal}</code>.                                                                  
+@literal _literal_                     Denotes literal text. The enclosed text is interpreted             Class, Interface, Enum, Field, Method   1.5.0
+                                       as not containing HTML markup or nested javadoc tags.                                                      
+
+
+File: cheatsheets.info,  Node: install texinfo,  Prev: javadoc annotations,  Up: cheatsheets
+
+1.3 install texinfo
+===================
+
+     install-info --info-dir=${HOME}/.emacs.d/info ~/.emacs.d/info/cheatsheets.info
+
+
+
+Tag Table:
+Node: Top260
+Node: cheatsheets638
+Node: junit annotations811
+Node: github search1086
+Node: Basic Annotations1381
+Ref: Basic Annotations-Footnote-11725
+Ref: Basic Annotations-Footnote-21817
+Ref: Basic Annotations-Footnote-31911
+Ref: Basic Annotations-Footnote-42004
+Ref: Basic Annotations-Footnote-52102
+Ref: Basic Annotations-Footnote-62201
+Ref: Basic Annotations-Footnote-72295
+Node: Parameterized Tests2397
+Node: Category2709
+Ref: Category-Footnote-13242
+Ref: Category-Footnote-23362
+Ref: Category-Footnote-33484
+Node: Rules3606
+Ref: Rules-Footnote-14040
+Node: Theory and related annotations4132
+Ref: Theory and related annotations-Footnote-15741
+Ref: Theory and related annotations-Footnote-25857
+Ref: Theory and related annotations-Footnote-35976
+Ref: Theory and related annotations-Footnote-46096
+Ref: Theory and related annotations-Footnote-56220
+Ref: Theory and related annotations-Footnote-66350
+Node: javadoc annotations6478
+Node: install texinfo9371
+
+End Tag Table
