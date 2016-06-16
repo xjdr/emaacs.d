@@ -10,3 +10,6 @@ ensime/
 backup/
 .places
 notes
+org-init/*.elc
+org-init/*.el
+info/*.texi
