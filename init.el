@@ -182,6 +182,11 @@
    :background "#111111"
    :box '(:line-width 6 :color "#111111" :style nil))
 
+(set-face-attribute 'mode-line-inactive nil
+   :foreground "#1793d0"
+   :background "#222222"
+   :box '(:line-width 6 :color "#22222" :style nil))
+
 ;; Info
 (add-hook 'Info-mode-hook		; After Info-mode has started
   (lambda ()
@@ -193,8 +198,3 @@
 (let ((custom-file (expand-file-name "custom.el" user-emacs-directory)))
   (if (file-exists-p custom-file)
     (load custom-file)))
-
-(set-face-attribute 'mode-line-inactive nil
-   :foreground "#1793d0"
-   :background "#222222"
-   :box '(:line-width 6 :color "#22222" :style nil))
