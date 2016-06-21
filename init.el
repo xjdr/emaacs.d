@@ -155,6 +155,27 @@
 
 (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
 
+(require 'autoinsert)
+(require 'skeleton)
+(setq java-boilerplate-skeleton '(nil
+  '(text-mode)
+  "package "
+  (replace-regexp-in-string "/" "."
+    (replace-regexp-in-string "/$" ""
+      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
+  ";" \n \n
+  "public class " (file-name-base (buffer-file-name)) " {" \n \n
+  "  " _ \n
+  "  public " (file-name-base (buffer-file-name)) "() {" \n
+  "}" \n
+  \n
+  "}" \n
+  '(java-mode)))
+
+(define-auto-insert
+  '("\\.java\\'" . "Java skeleton")
+  java-boilerplate-skeleton)
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
