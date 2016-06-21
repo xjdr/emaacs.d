@@ -49,6 +49,7 @@
                         editorconfig
                         google-c-style
                         ido-vertical-mode
+                        java-imports
                         smex
                         whole-line-or-region)))
     (dolist (list-item package-list)
@@ -150,14 +151,21 @@
             (editorconfig-mode)))
 
 ;; Java
+(require 'java-imports)
+
+(setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
             (setq-local compilation-environment (list
               (concat "FILE_NAME=" (buffer-file-name))))
+            (editorconfig-mode)
             (flymake-mode)
+            (java-imports-scan-file)
             (subword-mode)
-            (editorconfig-mode)))
+            (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
+            ))
 
 ;; Python
 (setq python-shell-interpreter "/usr/local/bin/ipython"
