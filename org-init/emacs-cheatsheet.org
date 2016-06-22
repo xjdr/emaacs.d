@@ -8,6 +8,12 @@
 (cheatsheet-add :group 'Common
                 :key "C-x C-c"
                 :description "leave Emacs.")
+(cheatsheet-add :group 'Common
+                :key "C-c C-s"
+                :description "CC mode syntax analysis.")
+(cheatsheet-add :group 'Common
+                :key "C-c C-o"
+                :description "CC mode change indent.")
 #+end_src
 
 * Registers

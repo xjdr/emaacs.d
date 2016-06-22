@@ -49,6 +49,7 @@
                         editorconfig
                         google-c-style
                         ido-vertical-mode
+                        java-imports
                         smex
                         whole-line-or-region)))
     (dolist (list-item package-list)
@@ -150,14 +151,54 @@
             (editorconfig-mode)))
 
 ;; Java
+(require 'java-imports)
+
+(setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
+
+(require 'autoinsert)
+(require 'skeleton)
+(setq java-boilerplate-skeleton '(nil
+  '(text-mode)
+  "package "
+  (replace-regexp-in-string "/" "."
+    (replace-regexp-in-string "/$" ""
+      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
+  ";" \n \n
+  "public class " (file-name-base (buffer-file-name)) " {" \n \n
+  "  " _ \n
+  "  public " (file-name-base (buffer-file-name)) "() {" \n
+  "}" \n
+  \n
+  "}" \n
+  '(java-mode)))
+
+(define-auto-insert
+  '("\\.java\\'" . "Java skeleton")
+  java-boilerplate-skeleton)
+
+
+(c-add-style "custom-java"
+  '("java"
+    (c-basic-offset 2)
+    (c-offsets-alist
+      (arglist-intro . +)
+      (arglist-close . 0)
+      (statement-cont . +)
+      (inexpr-class . 0)
+    )))
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
             (setq-local compilation-environment (list
               (concat "FILE_NAME=" (buffer-file-name))))
+            (editorconfig-mode)
             (flymake-mode)
+            (java-imports-scan-file)
             (subword-mode)
-            (editorconfig-mode)))
+            (c-set-style "custom-java")
+            (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
+            ))
 
 ;; Python
 (setq python-shell-interpreter "/usr/local/bin/ipython"
