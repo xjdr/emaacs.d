@@ -176,6 +176,17 @@
   '("\\.java\\'" . "Java skeleton")
   java-boilerplate-skeleton)
 
+
+(c-add-style "custom-java"
+  '("java"
+    (c-basic-offset 2)
+    (c-offsets-alist
+      (arglist-intro . +)
+      (arglist-close . 0)
+      (statement-cont . +)
+      (inexpr-class . 0)
+    )))
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
@@ -185,6 +196,7 @@
             (flymake-mode)
             (java-imports-scan-file)
             (subword-mode)
+            (c-set-style "custom-java")
             (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
             ))
 
