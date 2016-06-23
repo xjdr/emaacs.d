@@ -105,10 +105,13 @@
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-c t r") (lambda () (interactive) (compile "make -k test")))
 (global-set-key (kbd "C-x t") 'ansi-term)
 (global-set-key (kbd "C-x c e") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "C-x c n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-x c p") 'flymake-goto-prev-error)
+;; emacs binds this to M-space by default, which unfortunately Alfred binds to
+(global-set-key (kbd "s-\\") 'just-one-space)
 
 ;; window navigation keys
 (global-set-key "\C-ch" 'windmove-left)
@@ -176,6 +179,33 @@
   '("\\.java\\'" . "Java skeleton")
   java-boilerplate-skeleton)
 
+(defun java-test-name (test-kind)
+  "convert from java implementation name to test name"
+  (let ((basename (replace-regexp-in-string "main/java" "test/java" (file-name-sans-extension (buffer-file-name)))))
+    (concat basename (symbol-name test-kind) "Test.java")))
+
+(defun java-impl-name ()
+  "convert from java test name to implementation"
+  (concat
+    (replace-regexp-in-string "FunctionalTest\\|IntegrationTest\\|UnitTest" ""
+      (replace-regexp-in-string "test/java" "main/java"
+        (file-name-sans-extension (buffer-file-name)))) ".java"))
+
+(defun java-open-functional-test ()
+  (interactive)
+  (find-file (java-test-name 'Functional)))
+
+(defun java-open-integration-test ()
+  (interactive)
+  (find-file (java-test-name 'Integration)))
+
+(defun java-open-unit-test ()
+  (interactive)
+  (find-file (java-test-name 'Unit)))
+
+(defun java-open-implementation ()
+  (interactive)
+  (find-file (java-impl-name)))
 
 (c-add-style "custom-java"
   '("java"
@@ -198,6 +228,10 @@
             (subword-mode)
             (c-set-style "custom-java")
             (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
+            (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
+            (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
+            (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
+            (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
             ))
 
 ;; Python
