@@ -42,22 +42,27 @@
 
 (package-initialize)
 
+(setq xjdr-packages
+  '(
+    cheatsheet
+    editorconfig
+    google-c-style
+    ido-vertical-mode
+    java-imports
+    javadoc-lookup
+    smex
+    whole-line-or-region
+    ))
+
 (defun xjdr-bootstrap-packages ()
   (package-refresh-contents)
-  (let ((package-list '(
-                        cheatsheet
-                        editorconfig
-                        google-c-style
-                        ido-vertical-mode
-                        java-imports
-                        smex
-                        whole-line-or-region)))
-    (dolist (list-item package-list)
-      (unless (package-installed-p list-item)
-        (package-install list-item)))))
+  (dolist (list-item xjdr-packages)
+    (unless (package-installed-p list-item)
+      (package-install list-item))))
 
 ; bootstrap packages
-(unless package-archive-contents
+(require 'cl-extra)
+(when (cl-some (lambda (item) (not (package-installed-p item))) xjdr-packages)
   (xjdr-bootstrap-packages))
 
 ;; ido
@@ -101,14 +106,18 @@
 
 ;; Custom key bindings
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "RET") 'newline-and-indent)
+;; Not sure why we're doing this, it probably belongs in a mode hook
+;;(global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-c t r") (lambda () (interactive) (compile "make -k test")))
 (global-set-key (kbd "C-x t") 'ansi-term)
 (global-set-key (kbd "C-x c e") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "C-x c n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-x c p") 'flymake-goto-prev-error)
+;; emacs binds this to M-space by default, which unfortunately Alfred binds to
+(global-set-key (kbd "s-\\") 'just-one-space)
 
 ;; window navigation keys
 (global-set-key "\C-ch" 'windmove-left)
@@ -151,6 +160,9 @@
             (editorconfig-mode)))
 
 ;; Java
+(require 'javadoc-lookup)
+(javadoc-add-artifacts [io.netty netty-all 4.1.1.Final])
+
 (require 'java-imports)
 
 (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
@@ -176,6 +188,33 @@
   '("\\.java\\'" . "Java skeleton")
   java-boilerplate-skeleton)
 
+(defun java-test-name (test-kind)
+  "convert from java implementation name to test name"
+  (let ((basename (replace-regexp-in-string "main/java" "test/java" (file-name-sans-extension (buffer-file-name)))))
+    (concat basename (symbol-name test-kind) "Test.java")))
+
+(defun java-impl-name ()
+  "convert from java test name to implementation"
+  (concat
+    (replace-regexp-in-string "FunctionalTest\\|IntegrationTest\\|UnitTest" ""
+      (replace-regexp-in-string "test/java" "main/java"
+        (file-name-sans-extension (buffer-file-name)))) ".java"))
+
+(defun java-open-functional-test ()
+  (interactive)
+  (find-file (java-test-name 'Functional)))
+
+(defun java-open-integration-test ()
+  (interactive)
+  (find-file (java-test-name 'Integration)))
+
+(defun java-open-unit-test ()
+  (interactive)
+  (find-file (java-test-name 'Unit)))
+
+(defun java-open-implementation ()
+  (interactive)
+  (find-file (java-impl-name)))
 
 (c-add-style "custom-java"
   '("java"
@@ -198,6 +237,10 @@
             (subword-mode)
             (c-set-style "custom-java")
             (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
+            (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
+            (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
+            (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
+            (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
             ))
 
 ;; Python
