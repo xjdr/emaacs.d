@@ -101,7 +101,8 @@
 
 ;; Custom key bindings
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "RET") 'newline-and-indent)
+;; Not sure why we're doing this, it probably belongs in a mode hook
+;;(global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-k") 'compile)
