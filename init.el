@@ -42,22 +42,26 @@
 
 (package-initialize)
 
+(setq xjdr-packages
+  '(
+    cheatsheet
+    editorconfig
+    google-c-style
+    ido-vertical-mode
+    java-imports
+    smex
+    whole-line-or-region
+    ))
+
 (defun xjdr-bootstrap-packages ()
   (package-refresh-contents)
-  (let ((package-list '(
-                        cheatsheet
-                        editorconfig
-                        google-c-style
-                        ido-vertical-mode
-                        java-imports
-                        smex
-                        whole-line-or-region)))
-    (dolist (list-item package-list)
-      (unless (package-installed-p list-item)
-        (package-install list-item)))))
+  (dolist (list-item xjdr-packages)
+    (unless (package-installed-p list-item)
+      (package-install list-item))))
 
 ; bootstrap packages
-(unless package-archive-contents
+(require 'cl-extra)
+(when (cl-some (lambda (item) (not (package-installed-p item))) xjdr-packages)
   (xjdr-bootstrap-packages))
 
 ;; ido
