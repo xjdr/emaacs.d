@@ -49,6 +49,7 @@
     google-c-style
     ido-vertical-mode
     java-imports
+    javadoc-lookup
     smex
     whole-line-or-region
     ))
@@ -159,6 +160,9 @@
             (editorconfig-mode)))
 
 ;; Java
+(require 'javadoc-lookup)
+(javadoc-add-artifacts [io.netty netty-all 4.1.1.Final])
+
 (require 'java-imports)
 
 (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
