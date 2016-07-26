@@ -193,7 +193,7 @@
 (defun java-test-name (test-kind)
   "convert from java implementation name to test name"
   (let ((basename (replace-regexp-in-string "main/java" "test/java" (file-name-sans-extension (buffer-file-name)))))
-    (concat basename (symbol-name test-kind) "Test.java")))
+    (concat basename (if test-kind (symbol-name test-kind) "") "Test.java")))
 
 (defun java-impl-name ()
   "convert from java test name to implementation"
@@ -205,6 +205,10 @@
 (defun java-open-functional-test ()
   (interactive)
   (find-file (java-test-name 'Functional)))
+
+(defun java-open-generic-test ()
+  (interactive)
+  (find-file (java-test-name nil)))
 
 (defun java-open-integration-test ()
   (interactive)
@@ -240,6 +244,7 @@
             (c-set-style "custom-java")
             (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
             (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
+            (define-key java-mode-map (kbd "C-c t g") 'java-open-generic-test)
             (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
             (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
             (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
