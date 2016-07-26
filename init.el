@@ -162,6 +162,8 @@
 ;; Java
 (require 'javadoc-lookup)
 (javadoc-add-artifacts [io.netty netty-all 4.1.1.Final])
+(javadoc-add-artifacts [junit junit 4.12])
+(javadoc-add-artifacts [org.apache.thrift libthrift 0.9.3])
 
 (require 'java-imports)
 
