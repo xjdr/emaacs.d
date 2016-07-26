@@ -232,11 +232,14 @@
       (inexpr-class . 0)
     )))
 
+(setq java-use-infer nil)
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
             (setq-local compilation-environment (list
-              (concat "FILE_NAME=" (buffer-file-name))))
+              (concat "FILE_NAME=" (buffer-file-name))
+              (concat "NOINFER=" (if java-use-infer "" "1"))))
             (editorconfig-mode)
             (flymake-mode)
             (java-imports-scan-file)
