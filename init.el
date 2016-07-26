@@ -162,6 +162,8 @@
 ;; Java
 (require 'javadoc-lookup)
 (javadoc-add-artifacts [io.netty netty-all 4.1.1.Final])
+(javadoc-add-artifacts [junit junit 4.12])
+(javadoc-add-artifacts [org.apache.thrift libthrift 0.9.3])
 
 (require 'java-imports)
 
@@ -191,7 +193,7 @@
 (defun java-test-name (test-kind)
   "convert from java implementation name to test name"
   (let ((basename (replace-regexp-in-string "main/java" "test/java" (file-name-sans-extension (buffer-file-name)))))
-    (concat basename (symbol-name test-kind) "Test.java")))
+    (concat basename (if test-kind (symbol-name test-kind) "") "Test.java")))
 
 (defun java-impl-name ()
   "convert from java test name to implementation"
@@ -203,6 +205,10 @@
 (defun java-open-functional-test ()
   (interactive)
   (find-file (java-test-name 'Functional)))
+
+(defun java-open-generic-test ()
+  (interactive)
+  (find-file (java-test-name nil)))
 
 (defun java-open-integration-test ()
   (interactive)
@@ -226,11 +232,14 @@
       (inexpr-class . 0)
     )))
 
+(setq java-use-infer nil)
+
 (setq java-mode-hook nil)
 (add-hook 'java-mode-hook
           (lambda ()
             (setq-local compilation-environment (list
-              (concat "FILE_NAME=" (buffer-file-name))))
+              (concat "FILE_NAME=" (buffer-file-name))
+              (concat "NOINFER=" (if java-use-infer "" "1"))))
             (editorconfig-mode)
             (flymake-mode)
             (java-imports-scan-file)
@@ -238,6 +247,7 @@
             (c-set-style "custom-java")
             (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
             (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
+            (define-key java-mode-map (kbd "C-c t g") 'java-open-generic-test)
             (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
             (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
             (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
