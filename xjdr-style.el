@@ -4,7 +4,12 @@
 (if window-system
     (progn
       (custom-set-faces
-     '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "Black")))))
+       '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83")))))
+(set-face-attribute 'default nil
+                    :family "Source Code Pro"
+                    :height 140
+                    :weight 'normal
+                    :width 'normal)
     (tool-bar-mode 0)
     (scroll-bar-mode 0)
     (global-font-lock-mode 0)
@@ -23,14 +28,14 @@
   )
 
 (set-face-attribute 'mode-line nil
-                    :foreground "#1793d0"
-                    :background "Black"
-                    :box '(:line-width 6 :color "Black" :style nil))
+                    :foreground "#859900"
+                    :background "#073642"
+                    :box '(:line-width 6 :color "#073642" :style nil))
 
 (set-face-attribute 'mode-line-inactive nil
-                    :foreground "#1793d0"
-                    :background "#222222"
-                    :box '(:line-width 6 :color "#22222" :style nil))
+                    :foreground "#859900"
+                    :background "#586e75"
+                    :box '(:line-width 6 :color "#586e75" :style nil))
 
 (provide 'xjdr-style)
 
