@@ -1,20 +1,30 @@
 ;;; xjdr-style.el
 
-;;;; UI
+;;; UI
 (if window-system
     (progn
       (custom-set-faces
-       '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83")))))
-(set-face-attribute 'default nil
-                    :family "Source Code Pro"
-                    :height 140
-                    :weight 'normal
-                    :width 'normal)
-    (tool-bar-mode 0)
-    (scroll-bar-mode 0)
-    (global-font-lock-mode 0)
-    ;; 4px left, and no right fringe
-    (set-fringe-style '(4 . 0)))
+       '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#586e75"))))
+       '(show-paren-match ((nil (:background "#1793d0"))))
+       '(region ((nil (:background "#eee8d5")))))
+      (set-cursor-color "#d33682") 
+      (set-face-attribute 'default nil
+                          :family "Lato"
+                          :height 160
+                          :weight 'Light
+                          :width 'normal)
+      (set-face-attribute 'mode-line nil
+                          :foreground "#859900"
+                          :background "#073642"
+                          :box '(:line-width 6 :color "#073642" :style nil))
+      (set-face-attribute 'mode-line-inactive nil
+                          :foreground "#859900"
+                          :background "#eee8d5"
+                          :box '(:line-width 6 :color "#eee8d5" :style nil))
+      (tool-bar-mode 0)
+      (scroll-bar-mode 0)
+      (set-fringe-mode 0)
+      (global-font-lock-mode 0))
   ;; No menu bar when running from a terminal.
   (menu-bar-mode 0)
   (custom-set-faces
@@ -26,16 +36,6 @@
    '(show-paren-match ((nil (:background "#1793d0"))))
    '(show-paren-mismatch ((((class color)) (:background "red")))))
   )
-
-(set-face-attribute 'mode-line nil
-                    :foreground "#859900"
-                    :background "#073642"
-                    :box '(:line-width 6 :color "#073642" :style nil))
-
-(set-face-attribute 'mode-line-inactive nil
-                    :foreground "#859900"
-                    :background "#586e75"
-                    :box '(:line-width 6 :color "#586e75" :style nil))
 
 (provide 'xjdr-style)
 

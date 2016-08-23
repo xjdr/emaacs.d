@@ -24,7 +24,6 @@
                                (clojure    . t)
                                (python     . t)))
 
-
 (defun org-src-color-blocks-dark ()
   "Colors the block headers and footers to make them stand out more for dark themes"
   (interactive)

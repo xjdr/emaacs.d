@@ -1,12 +1,11 @@
-;;; init.el
-;; xjdr
+;;;  init.el
+;;  xjdr         
 
 (defconst emacs-start-time (current-time))
 (setq message-log-max 16384)
 
 ;; Get rid of some superfluous cruft
 (setq ring-bell-function 'ignore)
-
 
 (defun emacs-d (filename)
   "Expand FILENAME relative to `user-emacs-directory'."
@@ -27,9 +26,7 @@
 ;;; Personal Style
 (load (emacs-d "xjdr-style") 'missing-ok)
 ;;; org
-;(load (emacs-d 'xjdr-org") 'missing-ok)
-;;; Theme
-;(load-theme 'sanityinc-tomorrow-eighties t)
+(load (emacs-d "xjdr-org") 'missing-ok)
 
 ;;; no backup files, no auto-saving
 (setq make-backup-files nil)
@@ -43,15 +40,6 @@
       recentf-save-file (emacs-d "var/recentf")
       save-place-file (emacs-d "var/saved-places")
       ido-save-directory-list-file (emacs-d "var/ido-last.el"))
-;;(setq ido-use-faces t)
-;; (set-face-attribute 'ido-vertical-first-match-face nil
-;;                     :background nil
-;;                     :foreground "green")
-;; (set-face-attribute 'ido-vertical-only-match-face nil
-;;                     :background nil
-;;                     :foreground nil)
-;; (set-face-attribute 'ido-vertical-match-face nil
-;;                     :foreground nil)
 
 ;; Display completions vertically
 (setq ido-decorations (quote ("\n> " "" "\n  " "\n  ..." "[" "]"
@@ -61,6 +49,7 @@
 (defun ido-disable-line-truncation ()
   (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
+
 
 (defun ido-define-keys ()
   "C-(n|p) is more intuitive in vertical layout."
@@ -98,6 +87,7 @@
                  '(prog-mode-hook))
 
 ;;;; Whitespace
+(require 'whitespace)
 (setq-default indicate-empty-lines t) ; in the left fringe
 (setq require-final-newline t)
 (setq whitespace-style '(face trailing))
@@ -125,6 +115,14 @@
 (global-unset-key (kbd "s-q")) ; save-buffers-kill-emacs
 (global-unset-key (kbd "s-t")) ; ns-popup-font-panel
 
+;;; Custom Key Bindings
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+;;(global-set-key (kbd "RET") 'newline-and-indent)
+(global-set-key (kbd "s-/") 'comment-or-uncomment-region)
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-c t r") (lambda () (interactive) (compile "make -k test")))
+
 
 ;;;; Disabled commands
 (dolist (cmd
@@ -140,8 +138,6 @@
 (show-paren-mode)
 (global-auto-revert-mode)
 (setq tramp-persistency-file-name (emacs-d "var/tramp-history.el"))
-(hook-into-modes 'hl-line-mode '(prog-mode-hook
-                                 package-menu-mode-hook))
 
 
 ;;;; Internal Packages
@@ -157,6 +153,5 @@
     (message "Initialization complete.  (%.3fs)\n%s" elapsed (make-string 80 ?\-))))
 
 (add-hook 'after-init-hook 'init-duration-message 'append)
-
 
 ;;; init.el ends here
