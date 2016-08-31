@@ -154,4 +154,26 @@
 
 (add-hook 'after-init-hook 'init-duration-message 'append)
 
+;; Do the correct thing for markdown
+(defun my-markdown-mode ()
+  (when (and (stringp buffer-file-name)
+             (string-match "\\.md\\'" buffer-file-name))
+    (insert "OK")
+    (org-mode)
+    ))
+
+;; eshell visor
+(fset 'eshell-on
+      "\C-x1\M-xeshell\n")
+(fset 'eshell-off
+      "\C-x3\M-xbury-buffer\n\C-xo\M-xbury-buffer\n\M-xwindmove-left")
+
+(defun toggle-eshell ()
+  (interactive)
+  (if (string= "eshell-mode" (eval 'major-mode))
+      (execute-kbd-macro (symbol-function 'eshell-off))
+    (execute-kbd-macro (symbol-function 'eshell-on))))
+
+(global-set-key (kbd "C-x t") 'toggle-eshell)
+
 ;;; init.el ends here
