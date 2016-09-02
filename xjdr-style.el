@@ -11,8 +11,8 @@
        '(font-lock-type-face ((t ( :foreground "#859900"))))
        '(font-lock-keyword-face ((t ( :foreground "#d33682"))))
     )
-       
-      (set-cursor-color "#d33682") 
+
+      (set-cursor-color "#d33682")
       (set-face-attribute 'default nil
                           :family "Lato"
                           :height 150
@@ -28,8 +28,8 @@
                           :box '(:line-width 6 :color "#eee8d5" :style nil))
       (tool-bar-mode 0)
       (scroll-bar-mode 0)
-      (set-fringe-mode 0)
-     (global-font-lock-mode 0))        
+      (set-fringe-mode 0))
+;;     (global-font-lock-mode 0))
 
 ;; No menu bar when running from a terminal.
   (menu-bar-mode 0)
