@@ -1,5 +1,5 @@
 ;;;  init.el
-;;  xjdr         
+;;  xjdr
 
 (defconst emacs-start-time (current-time))
 (setq message-log-max 16384)
@@ -88,10 +88,8 @@
 
 ;;;; Whitespace
 (require 'whitespace)
-(setq-default indicate-empty-lines t) ; in the left fringe
-(setq require-final-newline t)
-(setq whitespace-style '(face trailing))
 (hook-into-modes 'whitespace-mode '(prog-mode-hook))
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;;;; *scratch* buffer
 (setq initial-scratch-message nil)
@@ -133,14 +131,15 @@
            narrow-to-region))
   (put cmd 'disabled nil))
 
-
 ;;;; Misc
 (show-paren-mode)
 (global-auto-revert-mode)
-(setq tramp-persistency-file-name (emacs-d "var/tramp-history.el"))
-
 
 ;;;; Internal Packages
+(require 'tramp)
+(setq tramp-default-method "ssh")
+(setq tramp-persistency-file-name (emacs-d "var/tramp-history.el"))
+
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
@@ -175,5 +174,11 @@
     (execute-kbd-macro (symbol-function 'eshell-on))))
 
 (global-set-key (kbd "C-x t") 'toggle-eshell)
+
+  (setq eshell-prompt-function (lambda nil
+    (concat
+     (propertize (eshell/pwd) 'face `(:foreground "#6c71c4"))
+     (propertize " $ " 'face `(:foreground "#586e75")))))
+  (setq eshell-highlight-prompt nil)
 
 ;;; init.el ends here
