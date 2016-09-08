@@ -27,7 +27,6 @@
 (load (emacs-d "xjdr-style") 'missing-ok)
 ;;; org
 (load (emacs-d "xjdr-org") 'missing-ok)
-
 ;;; no backup files, no auto-saving
 (setq make-backup-files nil)
 (setq auto-save-default nil
@@ -50,13 +49,15 @@
   (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
 
-
 (defun ido-define-keys ()
   "C-(n|p) is more intuitive in vertical layout."
   (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
   (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
 (add-hook 'ido-setup-hook 'ido-define-keys)
 
+;; ibuffer
+(require 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;;; Keyboard
 (when (string= system-type "darwin")
@@ -88,7 +89,7 @@
 
 ;;;; Whitespace
 (require 'whitespace)
-(hook-into-modes 'whitespace-mode '(prog-mode-hook))
+;;(hook-into-modes 'whitespace-mode '(prog-mode-hook))
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;;;; *scratch* buffer
@@ -177,8 +178,8 @@
 
   (setq eshell-prompt-function (lambda nil
     (concat
-     (propertize (eshell/pwd) 'face `(:foreground "#6c71c4"))
-     (propertize " $ " 'face `(:foreground "#586e75")))))
+     (propertize (eshell/pwd) 'face `(:foreground "#A074C4"))
+     (propertize " $ " 'face `(:foreground "white")))))
   (setq eshell-highlight-prompt nil)
 
 ;;; init.el ends here
