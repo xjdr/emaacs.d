@@ -44,7 +44,7 @@
    ;; Font Lock
    `(font-lock-builtin-face ((t (:foreground ,purple))))
    `(font-lock-comment-delimiter-face ((t (:inherit (font-lock-comment-face)))))
-   `(font-lock-comment-face ((t (:foreground ,text-3))))
+   `(font-lock-comment-face ((t (:foreground ,"#FF69B4"))))
    `(font-lock-constant-face ((t (:foreground ,orange))))
    `(font-lock-doc-face ((t (:foreground ,blue))))
    `(font-lock-function-name-face ((t (:foreground ,blue))))

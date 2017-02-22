@@ -4,9 +4,6 @@
 (setq ispell-program-name "/usr/local/bin/aspell")
 (setq ispell-dictionary "english")
 
-(custom-set-variables
- '(org-ditaa-jar-path "/usr/local/Cellar/ditaa/0.9/libexec/ditaa0_9.jar"))
-
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
 (add-hook 'org-mode-hook 'org-src-color-blocks-dark)
@@ -16,6 +13,7 @@
 
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((sh         . t)
+                               (C           .t)
                                (java       . t)
                                (js         . t)
                                (emacs-lisp . t)
@@ -36,6 +34,13 @@
      ((t (:background "#000000"))))
    '(org-block-end-line
      ((t (:foreground "#008ED1" :background "#002E41"))))))
+
+(font-lock-add-keywords 'org-mode
+                        '(("^ +\\([-*]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+(custom-set-faces
+    '(org-level-1 ((t (:foreground "purple" :bold t)))))
 
 (provide 'xjdr-org)
 
