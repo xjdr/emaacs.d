@@ -19,7 +19,7 @@
   (menu-bar-mode 0))
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; NO SAVES I USE GIT
+;; NO SAVES
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
@@ -119,7 +119,7 @@
 
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-buffer)
-
+(add-hook 'org-mode-hook 'visual-line-mode t)
 (org-babel-do-load-languages 'org-babel-load-languages
 			     '((sh         . t)
 			       (C           .t)
