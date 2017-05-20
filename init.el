@@ -1,7 +1,7 @@
 ;;  init.el
 ;;  xjdr - here be dragons and whatnot
 
-;; shhhhhhhhh
+;; shh
 (setq ring-bell-function 'ignore)
 
 ;; home sweet home
@@ -64,6 +64,7 @@
 ;;;; *scratch* buffer
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'org-mode)
+
 ;; Never kill, just bury
 (defun dont-kill-but-bury-scratch ()
   "Don't kill but burry *scratch* buffer."
@@ -76,13 +77,13 @@
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-c C-c") 'compile)
 (global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))
 
 ;; Misc
 (show-paren-mode)
 
-;;;; Tramp is life
+;;;; Tramp is good
 (require 'tramp)
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name (emacs-d "var/tramp-history.el"))
@@ -109,7 +110,6 @@
     (execute-kbd-macro (symbol-function 'eshell-on))))
 
 (global-set-key (kbd "C-x t") 'toggle-eshell)
-
 
 ;; Org
 (setq ispell-program-name "/usr/local/bin/aspell")
