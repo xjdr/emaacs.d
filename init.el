@@ -131,6 +131,17 @@
 			       (clojure    . t)
 			       (python     . t)))
 
+;; Java
+(add-hook 'java-mode-hook (lambda ()
+			    (setq c-basic-offset 2)
+			    (setq tab-width 2)
+			    (setq indent-tabs-mode t)
+			    (setq fill-column 100)
+			    (fci-mode t)
+			    (subword-mode t)
+			    (local-set-key (kbd "C-M-h") 'windmove-left)
+			    (hs-minor-mode 1)))
+
 ;; mode line sexy maker
 (set-cursor-color "#d33682")
 (set-face-attribute 'mode-line nil
