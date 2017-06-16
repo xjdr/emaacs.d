@@ -179,37 +179,54 @@
 ;; Packages
 
 (use-package ag
-	     :ensure t
-	     :defer t
-	     (setq ag-highlight-search t))
+  :ensure t
+  :defer t
+  :config
+  (setq ag-highlight-search t))
 
 (use-package editorconfig
-	     :ensure t)
+  :ensure t)
 
 (use-package flycheck
-	     :ensure t
-	     :config
-	     (add-hook 'after-init-hook #'global-flycheck-mode))
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 (use-package json-mode
-	     :ensure t)
+  :ensure t)
 
 (use-package magit
-	     :ensure t
-	     :config
-	     (global-set-key (kbd "C-c g") 'magit-status))
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c g") 'magit-status))
+
+(use-package markdown-mode
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
+  (setq projectile-enable-caching t
+	projectile-cache-file (emacs-d "var/projectile.cache")
+	projectile-known-projects-file (emacs-d "var/projectile-bookmarks.eld")))
 
 (use-package web-mode
-	     :ensure t
-	     :config
-	     (setq web-mode-markup-indent-offset 2)
-	     (setq web-mode-enable-auto-pairing t)
-	     ;; add navigation to Soy templates
-	     (add-to-list 'web-mode-imenu-regexp-list
-			  '("^{\\(template\\)[ ]+\\([^ ]+\\).*$" 1 2 " "))
-	     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-	     (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
-	     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  :ensure t
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-enable-auto-pairing t)
+  ;; add navigation to Soy templates
+  (add-to-list 'web-mode-imenu-regexp-list
+	       '("^{\\(template\\)[ ]+\\([^ ]+\\).*$" 1 2 " "))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 
 (use-package yaml-mode
@@ -219,32 +236,32 @@
 (use-package google-c-style
   :ensure t)
 
-  (defun my-c++-mode-hook ()
+(defun my-c++-mode-hook ()
   (google-set-c-style)
   (google-make-newline-indent))
 
 (add-hook 'c++-mode-hook
-	   (lambda ()
-	   (flycheck-mode)
-	   (my-c++-mode-hook)
-	   (editorconfig-mode)))
+	  (lambda ()
+	    (flycheck-mode)
+	    (my-c++-mode-hook)
+	    (editorconfig-mode)))
 
 ;; Java Stuffs
 (use-package javadoc-lookup
-	     :ensure t
-	     :config
-	     (javadoc-add-artifacts [io.netty netty-all 4.1.11.Final])
-	     (javadoc-add-artifacts [com.google.guava guava 21.0])
-	     (javadoc-add-artifacts [junit junit 4.12])
-	     (javadoc-add-artifacts [org.apache.thrift libthrift 0.9.3])
-	     )
+  :ensure t
+  :config
+  (javadoc-add-artifacts [io.netty netty-all 4.1.11.Final])
+  (javadoc-add-artifacts [com.google.guava guava 21.0])
+  (javadoc-add-artifacts [junit junit 4.12])
+  (javadoc-add-artifacts [org.apache.thrift libthrift 0.9.3])
+  )
 
 
 (use-package java-imports
-	     :ensure t
-	     :config
-	     (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
-	     )
+  :ensure t
+  :config
+  (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
+  )
 
 ;; Java
 (add-hook 'java-mode-hook (lambda ()
@@ -261,19 +278,19 @@
 (require 'autoinsert)
 (require 'skeleton)
 (setq java-boilerplate-skeleton '(nil
-  '(text-mode)
-  "package "
-  (replace-regexp-in-string "/" "."
-    (replace-regexp-in-string "/$" ""
-      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
-  ";" \n \n
-  "public class " (file-name-base (buffer-file-name)) " {" \n \n
-  "  " _ \n
-  "  public " (file-name-base (buffer-file-name)) "() {" \n
-  "}" \n
-  \n
-  "}" \n
-  '(java-mode)))
+				  '(text-mode)
+				  "package "
+				  (replace-regexp-in-string "/" "."
+							    (replace-regexp-in-string "/$" ""
+										      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
+				  ";" \n \n
+				  "public class " (file-name-base (buffer-file-name)) " {" \n \n
+				  "  " _ \n
+				  "  public " (file-name-base (buffer-file-name)) "() {" \n
+				  "}" \n
+				  \n
+				  "}" \n
+				  '(java-mode)))
 
 (define-auto-insert
   '("\\.java\\'" . "Java skeleton")
@@ -287,9 +304,9 @@
 (defun java-impl-name ()
   "convert from java test name to implementation"
   (concat
-    (replace-regexp-in-string "FunctionalTest\\|IntegrationTest\\|UnitTest\\|Test" ""
-      (replace-regexp-in-string "test/java" "main/java"
-	(file-name-sans-extension (buffer-file-name)))) ".java"))
+   (replace-regexp-in-string "FunctionalTest\\|IntegrationTest\\|UnitTest\\|Test" ""
+			     (replace-regexp-in-string "test/java" "main/java"
+						       (file-name-sans-extension (buffer-file-name)))) ".java"))
 
 (defun java-open-functional-test ()
   (interactive)
@@ -312,26 +329,26 @@
   (find-file (java-impl-name)))
 
 (c-add-style "custom-java"
-  '("java"
-    (c-basic-offset 2)
-    (c-offsets-alist
-      (arglist-intro . +)
-      (arglist-close . 0)
-      (statement-cont . +)
-      (inexpr-class . 0)
-    )))
+	     '("java"
+	       (c-basic-offset 2)
+	       (c-offsets-alist
+		(arglist-intro . +)
+		(arglist-close . 0)
+		(statement-cont . +)
+		(inexpr-class . 0)
+		)))
 
 ;; (setq java-use-infer nil)
 
 (flycheck-define-checker mvn-infer
-    "A Java syntax and style checker using infer.
+  "A Java syntax and style checker using infer.
 See URL http://fbinfer.com/"
-    :command ("infer" "--" "mvn compile")
-    :error-patterns
-    ((error line-start (file-name) ":" line ":" " error:" (message) line-end)
-     (warning line-start (file-name) ":" line ":" " warning:" (message) line-end)
-     (info line-start (file-name) ":" line ":" " info:" (message) line-end))
-    :modes java-mode)
+  :command ("infer" "--" "mvn compile")
+  :error-patterns
+  ((error line-start (file-name) ":" line ":" " error:" (message) line-end)
+   (warning line-start (file-name) ":" line ":" " warning:" (message) line-end)
+   (info line-start (file-name) ":" line ":" " info:" (message) line-end))
+  :modes java-mode)
 
 (require 'dash)
 (flycheck-define-checker mvn
@@ -350,8 +367,8 @@ See URL http://fbinfer.com/"
 (add-hook 'java-mode-hook
 	  (lambda ()
 	    (setq-local compilation-environment (list
-	      (concat "FILE_NAME=" (buffer-file-name))
-	      (concat "NOINFER=" (if java-use-infer "" "1"))))
+						 (concat "FILE_NAME=" (buffer-file-name))
+						 (concat "NOINFER=" (if java-use-infer "" "1"))))
 	    (editorconfig-mode)
 	    (flycheck-mode)
 	    (java-imports-scan-file)
@@ -366,10 +383,8 @@ See URL http://fbinfer.com/"
 	    ))
 
 ;; Python
-(use-package python-mode)
-
 (setq python-shell-interpreter "/usr/local/bin/ipython"
-     python-shell-interpreter-args "-i")
+      python-shell-interpreter-args "-i")
 (add-hook 'python-mode-hook
 	  (lambda ()
 	    (python-mode)
@@ -430,12 +445,15 @@ See URL http://fbinfer.com/"
    `(font-lock-type-face ((t (:foreground ,"black"))))
    `(font-lock-variable-name-face ((t (:foreground ,"black"))))
    ))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (flycheck-java-maven use-package))))
+ '(package-selected-packages
+   (quote
+    (projectile markdown-mode flycheck-java-maven use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
