@@ -356,26 +356,30 @@
 		(inexpr-class . 0)
 		)))
 
-;; (setq java-use-infer nil)
+(require 'dash)
 
-(flycheck-define-checker mvn-infer
+(flycheck-define-checker infer
   "A Java syntax and style checker using infer.
 See URL http://fbinfer.com/"
-  :command ("infer" "--" "mvn compile")
+  :command ("infer" "--" "mvn" "-f"
+	    (eval (-> (projectile-project-root)
+		      (concat "pom.xml")
+		      (expand-file-name)))
+	    "compile")
   :error-patterns
   ((error line-start (file-name) ":" line ":" " error:" (message) line-end)
    (warning line-start (file-name) ":" line ":" " warning:" (message) line-end)
    (info line-start (file-name) ":" line ":" " info:" (message) line-end))
   :modes java-mode)
 
-(require 'dash)
+
 (flycheck-define-checker mvn
   "A Maven Java synax checker."
   :command ("mvn" "-f"
 	    (eval (-> (projectile-project-root)
-(concat "pom.xml")
-		    (expand-file-name)))
-"compile")
+		      (concat "pom.xml")
+		      (expand-file-name)))
+	    "compile")
   :error-patterns ((error line-start "[ERROR] " (file-name) ":[" line "," column "]"
 			  (message) line-end)
 		   (warning line-start "[WARNING] " (file-name) ":[" line "," column "]"
