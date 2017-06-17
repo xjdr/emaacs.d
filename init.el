@@ -174,6 +174,24 @@
 			       (clojure    . t)
 			       (python     . t)))
 
+;; Compiler
+;; colorize the output of the compilation mode.
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region (point-min) (point-max))
+
+  ;; mocha seems to output some non-standard control characters that
+  ;; aren't recognized by ansi-color-apply-on-region, so we'll
+  ;; manually convert these into the newlines they should be.
+  (goto-char (point-min))
+  (while (re-search-forward "�\\[2K�\\[0G" nil t)
+    (progn
+      (replace-match "
+")))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
 
 
 ;; Packages
@@ -353,10 +371,11 @@ See URL http://fbinfer.com/"
 (require 'dash)
 (flycheck-define-checker mvn
   "A Maven Java synax checker."
-  :command ("mvn" "-f" (eval ( -> (shell-command-to-string "\$\(git rev-parse --show-toplevel\)")
-				  (concat "pom.xml")
-				  (expand-file-name)))
-	    "compile")
+  :command ("mvn" "-f"
+	    (eval (-> (projectile-project-root)
+(concat "pom.xml")
+		    (expand-file-name)))
+"compile")
   :error-patterns ((error line-start "[ERROR] " (file-name) ":[" line "," column "]"
 			  (message) line-end)
 		   (warning line-start "[WARNING] " (file-name) ":[" line "," column "]"
