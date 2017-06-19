@@ -187,6 +187,11 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
+(use-package git-commit
+  :ensure t
+  :config
+  (add-hook 'git-commit-mode-hook 'flyspell-mode))
+
 (use-package js2-mode
   :ensure t
   :config
@@ -228,7 +233,45 @@
   :ensure t)
 
 ;; Load modules
+(load (emacs-d "go") 'missing-ok)
 (load (emacs-d "c++") 'missing-ok)
 (load (emacs-d "java") 'missing-ok)
 (load (emacs-d "python") 'missing-ok)
 (load (emacs-d "hipster-theme") 'missing-ok)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (go-eldoc go-mode yaml-mode web-mode use-package projectile markdown-mode magit json-mode js2-mode javadoc-lookup java-imports google-c-style flycheck editorconfig ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background "#FFFFEA"))))
+ '(error ((t (:foreground "#CE4045" :weight bold :underline (:color "#CE4045" :style line)))))
+ '(font-lock-builtin-face ((t (:foreground "black"))))
+ '(font-lock-comment-delimiter-face ((t (:inherit (font-lock-comment-face)))))
+ '(font-lock-comment-face ((t (:foreground "#708090"))))
+ '(font-lock-constant-face ((t (:foreground "black"))))
+ '(font-lock-doc-face ((t (:foreground "black"))))
+ '(font-lock-function-name-face ((t (:foreground "black"))))
+ '(font-lock-keyword-face ((t (:foreground "#3F00FF"))))
+ '(font-lock-negation-char-face ((t nil)))
+ '(font-lock-preprocessor-face ((t (:inherit (font-lock-builtin-face)))))
+ '(font-lock-regexp-grouping-backslash ((t (:inherit (bold)))))
+ '(font-lock-regexp-grouping-construct ((t (:inherit (bold)))))
+ '(font-lock-string-face ((t (:foreground "#555555"))))
+ '(font-lock-type-face ((t (:foreground "black"))))
+ '(font-lock-variable-name-face ((t (:foreground "black"))))
+ '(font-lock-warning-face ((t (:foreground "red" :weight bold))))
+ '(isearch ((t (:background "white" :foreground "blue" :box (:line-width 1 :color "#4F99D3") :weight bold))))
+ '(lazy-highlight ((t (:background "white" :foreground "#858D8A" :box (:line-width 1 :color "#4F99D3")))))
+ '(match ((t (:weight bold :foreground "white" :background "#8BE03C"))))
+ '(next-error ((t (:inherit (region)))))
+ '(query-replace ((t (:inherit (isearch)))))
+ '(secondary-selection ((t (:background "grey"))))
+ '(trailing-whitespace ((t (:background "grey")))))
