@@ -1,6 +1,10 @@
 ;;  init.el
 ;;  xjdr - here be dragons and whatnot
 
+;;; load custom settings
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
 ;; shh
 (setq ring-bell-function 'ignore)
 
@@ -57,7 +61,8 @@
 
 (setq package-archives
       (append package-archives
-	      '(("melpa" . "http://melpa.milkbox.net/packages/"))))
+	      (add-to-list 'package-archives
+			   '("melpa" . "https://melpa.org/packages/"))))
 
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -114,13 +119,6 @@
       (progn (bury-buffer) nil)
     t))
 (add-hook 'kill-buffer-query-functions 'dont-kill-but-bury-scratch)
-
-;; Custom Key Bindings
-(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "s-/") 'comment-or-uncomment-region)
-(global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-c C-c") 'compile)
-(global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))
 
 ;; Misc
 (show-paren-mode)
@@ -216,6 +214,9 @@
 	projectile-cache-file (emacs-d "var/projectile.cache")
 	projectile-known-projects-file (emacs-d "var/projectile-bookmarks.eld")))
 
+(use-package protobuf-mode
+  :ensure t)
+
 (use-package web-mode
   :ensure t
   :config
@@ -237,41 +238,12 @@
 (load (emacs-d "c++") 'missing-ok)
 (load (emacs-d "java") 'missing-ok)
 (load (emacs-d "python") 'missing-ok)
+(load (emacs-d "clojure") 'missing-ok)
 (load (emacs-d "hipster-theme") 'missing-ok)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (go-eldoc go-mode yaml-mode web-mode use-package projectile markdown-mode magit json-mode js2-mode javadoc-lookup java-imports google-c-style flycheck editorconfig ag))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background "#FFFFEA"))))
- '(error ((t (:foreground "#CE4045" :weight bold :underline (:color "#CE4045" :style line)))))
- '(font-lock-builtin-face ((t (:foreground "black"))))
- '(font-lock-comment-delimiter-face ((t (:inherit (font-lock-comment-face)))))
- '(font-lock-comment-face ((t (:foreground "#708090"))))
- '(font-lock-constant-face ((t (:foreground "black"))))
- '(font-lock-doc-face ((t (:foreground "black"))))
- '(font-lock-function-name-face ((t (:foreground "black"))))
- '(font-lock-keyword-face ((t (:foreground "#3F00FF"))))
- '(font-lock-negation-char-face ((t nil)))
- '(font-lock-preprocessor-face ((t (:inherit (font-lock-builtin-face)))))
- '(font-lock-regexp-grouping-backslash ((t (:inherit (bold)))))
- '(font-lock-regexp-grouping-construct ((t (:inherit (bold)))))
- '(font-lock-string-face ((t (:foreground "#555555"))))
- '(font-lock-type-face ((t (:foreground "black"))))
- '(font-lock-variable-name-face ((t (:foreground "black"))))
- '(font-lock-warning-face ((t (:foreground "red" :weight bold))))
- '(isearch ((t (:background "white" :foreground "blue" :box (:line-width 1 :color "#4F99D3") :weight bold))))
- '(lazy-highlight ((t (:background "white" :foreground "#858D8A" :box (:line-width 1 :color "#4F99D3")))))
- '(match ((t (:weight bold :foreground "white" :background "#8BE03C"))))
- '(next-error ((t (:inherit (region)))))
- '(query-replace ((t (:inherit (isearch)))))
- '(secondary-selection ((t (:background "grey"))))
- '(trailing-whitespace ((t (:background "grey")))))
+
+;; Custom Key Bindings
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+(global-set-key (kbd "s-/") 'comment-or-uncomment-region)
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-c C-c") 'compile)
+(global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))
