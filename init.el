@@ -206,19 +206,8 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(use-package git-commit
-  :ensure t
-  :config
-  (add-hook 'git-commit-mode-hook 'flyspell-mode))
-
-
 (use-package google-c-style
   :ensure t)
-
-(use-package js2-mode
-  :ensure t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 (use-package json-mode
   :ensure t)
