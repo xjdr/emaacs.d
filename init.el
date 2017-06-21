@@ -5,6 +5,18 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+;; Set PATH
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$"
+			  ""
+			  (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq eshell-path-env path-from-shell) ; for eshell users
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(when window-system (set-exec-path-from-shell-PATH))
+
 ;; shh
 (setq ring-bell-function 'ignore)
 
@@ -128,10 +140,7 @@
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name (emacs-d "var/tramp-history.el"))
 
-;; eshell stuffs
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
+;; eshell
 (setq eshell-prompt-function (lambda nil
 			       (concat
 				(propertize (eshell/pwd) 'face `(:foreground "#A074C4"))
@@ -139,9 +148,10 @@
 (setq eshell-highlight-prompt nil)
 
 (fset 'eshell-on
-      "\C-x1\M-xeshell\n")
+      "\C-x3\C-xo\M-xeshell")
+
 (fset 'eshell-off
-      "\C-x3\M-xbury-buffer\n\C-xo\M-xbury-buffer\n\M-xwindmove-left")
+      "\C-x0")
 
 (defun toggle-eshell ()
   (interactive)
@@ -150,6 +160,7 @@
     (execute-kbd-macro (symbol-function 'eshell-on))))
 
 (global-set-key (kbd "C-x t") 'toggle-eshell)
+
 
 ;; Compiler
 ;; colorize the output of the compilation mode.
@@ -229,7 +240,6 @@
   (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
-
 (use-package yaml-mode
   :ensure t)
 
@@ -241,7 +251,7 @@
 (load (emacs-d "clojure") 'missing-ok)
 (load (emacs-d "hipster-theme") 'missing-ok)
 
-;; Custom Key Bindings
+;; Custom Key Bindings down here so they aren't overwritten by somethingc
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
