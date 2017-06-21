@@ -8,9 +8,9 @@
 ;; Set PATH
 (defun set-exec-path-from-shell-PATH ()
   (let ((path-from-shell (replace-regexp-in-string
-			  "[ \t\n]*$"
-			  ""
-			  (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+                          "[ \t\n]*$"
+                          ""
+                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
     (setenv "PATH" path-from-shell)
     (setq eshell-path-env path-from-shell) ; for eshell users
     (setq exec-path (split-string path-from-shell path-separator))))
@@ -39,6 +39,10 @@
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
+;;; TAB behavior
+(setq tab-always-indent 'complete)
+(setq-default indent-tabs-mode nil)   ; never use tabs to indent.
+
 ;; Encodings
 (set-terminal-coding-system 'utf-8)     ; always use UTF-8
 (set-keyboard-coding-system 'utf-8)     ; it is the future
@@ -48,10 +52,10 @@
 (defun xjdr/configure-cocoa ()
   ;; open up maximized-ish
   (let ((px (display-pixel-width))
-	(py (display-pixel-height))
-	(fx (frame-char-width))
-	(fy (frame-char-height))
-	tx ty)
+        (py (display-pixel-height))
+        (fx (frame-char-width))
+        (fy (frame-char-height))
+        tx ty)
     (setq tx (- (/ px fx) 7))
     (setq ty (- (/ py fy) 4))
     (setq initial-frame-alist '((top . 2) (left . 2)))
@@ -73,8 +77,8 @@
 
 (setq package-archives
       (append package-archives
-	      (add-to-list 'package-archives
-			   '("melpa" . "https://melpa.org/packages/"))))
+              (add-to-list 'package-archives
+                           '("melpa" . "https://melpa.org/packages/"))))
 
 (package-initialize)
 (unless (package-installed-p 'use-package)
@@ -92,8 +96,8 @@
 
 ;; Display completions vertically
 (setq ido-decorations (quote ("\n> " "" "\n  " "\n  ..." "[" "]"
-			      " [No Match]" " [Matched]" " [Not Readable]"
-			      " [Too Big]" " [Confirm]")))
+                              " [No Match]" " [Matched]" " [Not Readable]"
+                              " [Too Big]" " [Confirm]")))
 
 (defun ido-disable-line-truncation ()
   (set (make-local-variable 'truncate-lines) nil))
@@ -112,9 +116,9 @@
 ;; Keyboard
 (when (string= system-type "darwin")
   (setq mac-option-modifier 'meta
-	mac-command-modifier 'super
-	delete-by-moving-to-trash t
-	trash-directory (expand-file-name ".Trash" (getenv "HOME"))))
+        mac-command-modifier 'super
+        delete-by-moving-to-trash t
+        trash-directory (expand-file-name ".Trash" (getenv "HOME"))))
 
 ;; Whitespace
 (require 'whitespace)
@@ -142,9 +146,9 @@
 
 ;; eshell
 (setq eshell-prompt-function (lambda nil
-			       (concat
-				(propertize (eshell/pwd) 'face `(:foreground "#A074C4"))
-				(propertize " $ " 'face `(:foreground "black")))))
+                               (concat
+                                (propertize (eshell/pwd) 'face `(:foreground "#A074C4"))
+                                (propertize " $ " 'face `(:foreground "black")))))
 (setq eshell-highlight-prompt nil)
 
 (fset 'eshell-on
@@ -180,6 +184,12 @@
   (toggle-read-only))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
+;; Custom Key Bindings down here so they aren't overwritten by something
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+(global-set-key (kbd "s-/") 'comment-or-uncomment-region)
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-c C-c") 'compile)
+(global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))
 
 ;; Packages
 (use-package ag
@@ -200,6 +210,10 @@
   :ensure t
   :config
   (add-hook 'git-commit-mode-hook 'flyspell-mode))
+
+
+(use-package google-c-style
+  :ensure t)
 
 (use-package js2-mode
   :ensure t
@@ -222,8 +236,8 @@
   :diminish projectile-mode
   :init
   (setq projectile-enable-caching t
-	projectile-cache-file (emacs-d "var/projectile.cache")
-	projectile-known-projects-file (emacs-d "var/projectile-bookmarks.eld")))
+        projectile-cache-file (emacs-d "var/projectile.cache")
+        projectile-known-projects-file (emacs-d "var/projectile-bookmarks.eld")))
 
 (use-package protobuf-mode
   :ensure t)
@@ -235,7 +249,7 @@
   (setq web-mode-enable-auto-pairing t)
   ;; add navigation to Soy templates
   (add-to-list 'web-mode-imenu-regexp-list
-	       '("^{\\(template\\)[ ]+\\([^ ]+\\).*$" 1 2 " "))
+               '("^{\\(template\\)[ ]+\\([^ ]+\\).*$" 1 2 " "))
   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.soy\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
@@ -250,10 +264,3 @@
 (load (emacs-d "python") 'missing-ok)
 (load (emacs-d "clojure") 'missing-ok)
 (load (emacs-d "hipster-theme") 'missing-ok)
-
-;; Custom Key Bindings down here so they aren't overwritten by somethingc
-(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "s-/") 'comment-or-uncomment-region)
-(global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-c C-c") 'compile)
-(global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))

@@ -15,34 +15,24 @@
   (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
   )
 
-;; Java
-(add-hook 'java-mode-hook (lambda ()
-			    (setq c-basic-offset 2)
-			    (setq tab-width 2)
-			    (setq indent-tabs-mode t)
-			    (setq fill-column 100)
-			    (fci-mode t)
-			    (subword-mode t)
-			    (local-set-key (kbd "C-M-h") 'windmove-left)
-			    (hs-minor-mode 1)))
-
-
 (require 'autoinsert)
 (require 'skeleton)
 (setq java-boilerplate-skeleton '(nil
-				  '(text-mode)
-				  "package "
-				  (replace-regexp-in-string "/" "."
-							    (replace-regexp-in-string "/$" ""
-										      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
-				  ";" \n \n
-				  "public class " (file-name-base (buffer-file-name)) " {" \n \n
-				  "  " _ \n
-				  "  public " (file-name-base (buffer-file-name)) "() {" \n
-				  "}" \n
-				  \n
-				  "}" \n
-				  '(java-mode)))
+                                  '(text-mode)
+                                  "package "
+                                  (replace-regexp-in-string "/" "."
+                                                            (replace-regexp-in-string "/$" ""
+                                                                                      (elt (split-string (file-name-directory (buffer-file-name)) "java/") 1)))
+                                  ";" \n \n
+                                  "public class " (file-name-base (buffer-file-name)) " {" \n \n
+                                  "  " _ \n
+                                  "  public " (file-name-base (buffer-file-name)) "() {" \n
+                                  "}" \n
+                                  \n
+                                  "}" \n
+                                  '(java-mode)))
+
+(setq java-use-infer nil)
 
 (define-auto-insert
   '("\\.java\\'" . "Java skeleton")
@@ -57,8 +47,8 @@
   "convert from java test name to implementation"
   (concat
    (replace-regexp-in-string "FunctionalTest\\|IntegrationTest\\|UnitTest\\|Test" ""
-			     (replace-regexp-in-string "test/java" "main/java"
-						       (file-name-sans-extension (buffer-file-name)))) ".java"))
+                             (replace-regexp-in-string "test/java" "main/java"
+                                                       (file-name-sans-extension (buffer-file-name)))) ".java"))
 
 (defun java-open-functional-test ()
   (interactive)
@@ -80,26 +70,16 @@
   (interactive)
   (find-file (java-impl-name)))
 
-(c-add-style "custom-java"
-	     '("java"
-	       (c-basic-offset 2)
-	       (c-offsets-alist
-		(arglist-intro . +)
-		(arglist-close . 0)
-		(statement-cont . +)
-		(inexpr-class . 0)
-		)))
-
 (require 'dash)
 
 (flycheck-define-checker infer
   "A Java syntax and style checker using infer.
 See URL http://fbinfer.com/"
   :command ("infer" "--" "mvn" "-f"
-	    (eval (-> (projectile-project-root)
-		      (concat "pom.xml")
-		      (expand-file-name)))
-	    "compile")
+            (eval (-> (projectile-project-root)
+                      (concat "pom.xml")
+                      (expand-file-name)))
+            "compile")
   :error-patterns
   ((error line-start (file-name) ":" line ":" " error:" (message) line-end)
    (warning line-start (file-name) ":" line ":" " warning:" (message) line-end)
@@ -110,37 +90,41 @@ See URL http://fbinfer.com/"
 (flycheck-define-checker mvn
   "A Maven Java synax checker."
   :command ("mvn" "-f"
-	    (eval (-> (projectile-project-root)
-		      (concat "pom.xml")
-		      (expand-file-name)))
-	    "compile")
+            (eval (-> (projectile-project-root)
+                      (concat "pom.xml")
+                      (expand-file-name)))
+            "compile")
   :error-patterns ((error line-start "[ERROR] " (file-name) ":[" line "," column "]"
-			  (message) line-end)
-		   (warning line-start "[WARNING] " (file-name) ":[" line "," column "]"
-			    (message) line-end))
+                          (message) line-end)
+                   (warning line-start "[WARNING] " (file-name) ":[" line "," column "]"
+                            (message) line-end))
   :modes java-mode)
 
 (eval-after-load 'flycheck
   '(add-to-list 'flycheck-checkers 'mvn 'infer))
 
 (add-hook 'java-mode-hook
-	  (lambda ()
-	    (setq-local compilation-environment (list
-						 (concat "FILE_NAME=" (buffer-file-name))
-						 (concat "NOINFER=" (if java-use-infer "" "1"))))
-	    (editorconfig-mode)
-	    (flycheck-mode)
-	    (setq flycheck-checker 'mvn
-	    (java-imports-scan-file)
-	    (subword-mode)
-	    (c-set-style "custom-java")
-	    (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
-	    (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
-	    (define-key java-mode-map (kbd "C-c t g") 'java-open-generic-test)
-	    (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
-	    (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
-	    (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
-	    )))
-
+          (lambda ()
+            "Treat Java 1.5 @-style annotations as comments."
+            (setq c-comment-start-regexp "(@|/(/|[*][*]?))")
+            (modify-syntax-entry ?@ "< b" java-mode-syntax-table)
+            (google-set-c-style)
+            (google-make-newline-indent)
+            (setq-local compilation-environment (list
+                                                 (concat "FILE_NAME=" (buffer-file-name))
+                                                 (concat "NOINFER=" (if java-use-infer "" "1"))))
+            (editorconfig-mode)
+            (flycheck-mode)
+            (setq flycheck-checker 'mvn
+            (java-imports-scan-file)
+            (subword-mode)
+            (c-set-style "custom-java")
+            (define-key java-mode-map (kbd "C-c i") 'java-imports-add-import-dwim)
+            (define-key java-mode-map (kbd "C-c t f") 'java-open-functional-test)
+            (define-key java-mode-map (kbd "C-c t g") 'java-open-generic-test)
+            (define-key java-mode-map (kbd "C-c t i") 'java-open-integration-test)
+            (define-key java-mode-map (kbd "C-c t t") 'java-open-implementation)
+            (define-key java-mode-map (kbd "C-c t u") 'java-open-unit-test)
+            )))
 
 (provide 'java)
