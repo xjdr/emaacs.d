@@ -16,9 +16,9 @@
   (define-key (current-local-map) "\C-c\C-c" 'compile)
 
   (add-hook 'before-save-hook 'gofmt-before-save)
-  (setq gofmt-command "goimports"))
+  (setq gofmt-command "goimports")
 
-  ;;(local-set-key (kbd "M-.") 'godef-jump))
+  (local-set-key (kbd "M-.") 'godef-jump))
 
 (add-hook 'go-mode-hook 'go-mode-setup)
 
