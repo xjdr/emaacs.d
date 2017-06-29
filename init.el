@@ -76,7 +76,7 @@
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "s-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-c C-k") 'compile)
+(global-set-key (kbd "C-c C-c") 'compile)
 (global-set-key (kbd "C-c C-t") (lambda () (interactive) (compile "make -k test")))
 
 ;; Misc
@@ -188,8 +188,8 @@ PWD is not in a git repo (or the git command is not found)."
 
 ;; Fonts and whatnot
   (set-face-attribute 'default nil
-		      :family "Source Code Pro"
-		      :height 150
+		      ;;:family "Source Code Pro"
+		      :height 125
 		      :weight 'normal
 		      :width 'normal)
 
