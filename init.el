@@ -7,9 +7,9 @@
 ;; Set PATH
 (defun set-exec-path-from-shell-PATH ()
   (let ((path-from-shell (replace-regexp-in-string
-			  "[ \t\n]*$"
-			  ""
-			  (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+                          "[ \t\n]*$"
+                          ""
+                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
     (setenv "PATH" path-from-shell)
     (setq eshell-path-env path-from-shell) ; for eshell users
     (setq exec-path (split-string path-from-shell path-separator))))
@@ -20,17 +20,17 @@
       package-enable-at-startup nil
       package-archives
       '(("gnu"   . "https://elpa.gnu.org/packages/")
-	("melpa" . "https://melpa.org/packages/"))
+        ("melpa" . "https://melpa.org/packages/"))
 
       ;; security settings
       gnutls-verify-error t
       tls-checktrust gnutls-verify-error
       tls-program (list "gnutls-cli --x509cafile %t -p %p %h"
-			;; compatibility fallbacks
-			"gnutls-cli -p %p %h"
-			"openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof")
+                        ;; compatibility fallbacks
+                        "gnutls-cli -p %p %h"
+                        "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof")
 
-       ;; Don't track MELPA, we'll use package.el for that
+      ;; Don't track MELPA, we'll use package.el for that
       quelpa-checkout-melpa-p nil
       quelpa-update-melpa-p nil
       quelpa-melpa-recipe-stores nil
@@ -74,13 +74,12 @@
  confirm-nonexistent-file-or-buffer t
  enable-recursive-minibuffers nil
  idle-update-delay 2              ; update ui less often
- ;; keep the point out of the minibuffer
  minibuffer-prompt-properties '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)
- ;; History & backup settings (save nothing, that's what git is for)
  auto-save-default nil
  create-lockfiles nil
  history-length 500
  make-backup-files nil
+
  ;; files
  abbrev-file-name             (concat  user-emacs-directory "local/abbrev.el")
  auto-save-list-file-name     (concat  user-emacs-directory "cache/autosave")
@@ -105,8 +104,8 @@
   :ensure t
   :hook (prog-mode . hl-todo-mode)
   :commands (hl-todo-previous
-	     hl-todo-next
-	     hl-todo-occur))
+             hl-todo-next
+             hl-todo-occur))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -138,28 +137,24 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
-(use-package hl-todo
-  :ensure t
-  :hook (prog-mode . hl-todo-mode)
-  :commands (hl-todo-previous
-	     hl-todo-next
-	     hl-todo-occur))
+(use-package smex
+  :ensure t)
 
 (use-package counsel
   :ensure t
   :commands (counsel-load-theme
-	     counsel-bookmark)
+             counsel-bookmark)
   :bind* (("C-c i" . counsel-imenu)
-	  ("C-x b" . ivy-switch-buffer)
-	  ("C-x C-f" . counsel-find-file)
-	  ("C-c C-/" . counsel-rg)
-	  ("M-y" . counsel-yank-pop)
-	  ("M-x" . counsel-M-x))
+          ("C-x b" . ivy-switch-buffer)
+          ("C-x C-f" . counsel-find-file)
+          ("C-c C-/" . counsel-rg)
+          ("M-y" . counsel-yank-pop)
+          ("M-x" . counsel-M-x))
   :config
   (setq counsel-find-file-ignore-regexp
-	(concat "\\(?:\\`[#.]\\)\\|\\(?:[#~]\\'\\)"
-		"\\|\\.x\\'\\|\\.d\\'\\|\\.o\\'"
-		"\\|\\.aux\\'"))
+        (concat "\\(?:\\`[#.]\\)\\|\\(?:[#~]\\'\\)"
+                "\\|\\.x\\'\\|\\.d\\'\\|\\.o\\'"
+                "\\|\\.aux\\'"))
 
   (setq counsel-locate-cmd 'counsel-locate-cmd-mdfind)
   (setq counsel-find-file-at-point t))
@@ -180,8 +175,133 @@
   (ivy-mode 1)
   (setq ivy-display-function nil))
 
+(use-package ibuffer
+  :ensure t)
+
+
+;; Flycheck
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
+(use-package flycheck-rust
+  :ensure t
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(eval-after-load 'flycheck
+  '(custom-set-variables
+    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))))
+
+(add-to-list 'flycheck-checkers 'python-pylint 'python-mypy)
+(flycheck-add-mode 'javascript-eslint 'js-mode)
+
+(defun counsel-flycheck ()
+  (interactive)
+  (if (not (bound-and-true-p flycheck-mode))
+      (message "Flycheck mode is not available or enabled")
+    (ivy-read "Error: "
+              (let ((source-buffer (current-buffer)))
+                (with-current-buffer (or (get-buffer flycheck-error-list-buffer)
+                                         (progn
+                                           (with-current-buffer
+                                               (get-buffer-create flycheck-error-list-buffer)
+                                             (flycheck-error-list-mode)
+                                             (current-buffer))))
+                  (flycheck-error-list-set-source source-buffer)
+                  (flycheck-error-list-reset-filter)
+                  (revert-buffer t t t)
+                  (split-string (buffer-string) "\n" t " *")))
+              :action (lambda (s &rest _)
+                        (-when-let* ( (error (get-text-property 0 'tabulated-list-id s))
+                                      (pos (flycheck-error-pos error)) )
+                          (goto-char (flycheck-error-pos error))))
+              :history 'counsel-flycheck-history)))
+
+;; Languages
+
+;; Rust
+(use-package rust-mode
+  :ensure t
+  :config
+  (setq rust-format-on-save t)
+  (add-hook 'rust-mode-hook
+            (lambda ()
+              (setq rust-format-on-save t)
+              (setq-local company-backends (list 'company-lsp))
+              (setq flycheck-rust-clippy-executable "/Users/xjdr/.cargo/bin/cargo-clippy")))
+  (add-hook 'rust-mode-hook 'flycheck-mode)
+  (add-hook 'rust-mode-hook 'company-mode))
+
+(use-package toml-mode
+  :ensure t)
+
+(use-package racer
+  :ensure t
+  :config
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode))
+
+;; C++
+(use-package google-c-style
+  :ensure t)
+
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (google-set-c-style)
+            (google-make-newline-indent)))
+(add-hook 'c++-mode-hook 'flycheck-mode)
+(add-hook 'c++-mode-hook 'company-mode)
+
+;; LSP
+(use-package editorconfig
+  :ensure
+  :config (editorconfig-mode))
+
+(use-package projectile
+  :ensure t)
+
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :hook (prog-mode . lsp)
+  :config (require 'lsp-clients)
+  :init
+  (when (equal system-type 'darwin)
+    (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")))
+
+(use-package lsp-ui
+  :ensure t
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (set-face-attribute 'lsp-ui-doc-background nil :background "#f9f2d9"))
+
+(use-package hydra
+  :ensure t)
+
+(use-package company
+  :ensure t)
+
+(use-package company-lsp
+  :after  company
+  :ensure t
+  :config
+  (setq company-lsp-cache-candidates t
+        company-lsp-async t))
+
+;; Config
+(use-package yaml-mode
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . gfm-mode))
+  :config
+  (setq markdown-fontify-code-blocks-natively t))
+
 ;; Eshell
-;; Colorize strings:
 (defmacro with-face (str &rest properties)
   "Return STR with the given face PROPERTIES, suitable for `concat'."
   `(propertize ,str 'face (list ,@properties)))
@@ -194,24 +314,24 @@
 (setq eshell-highlight-prompt nil)
 (setq eshell-prompt-function
       (lambda ()
-	(let ((red       "#dc322f")
-	      (purple    "#FFCCFF")
-	      (magenta   "#d33682")
-	      (base      "#839496"))
-	  (concat
-	   (let ((status eshell-last-command-status))
-	     (when (not (= status 0))
-	       (with-face (concat "[" (number-to-string status) "] ") :foreground "#dc322f")))
-	   (with-face "┌─@" :foreground (if (= (user-uid) 0) "#dc322f" "#268bd2"))
-	   (with-face (system-name) :foreground "#b58900") " "
-	   (with-face (replace-regexp-in-string (concat "\\`" (getenv "HOME")) "~" (eshell/pwd))
-		      :foreground "#268bd2")
-	   ;; TODO: Display more Git info.
-	   (let ((head (shell-command-to-string "git describe --contains --all HEAD")))
-	     (unless (string-match "fatal:" head)
-	       (concat "[" (with-face (replace-regexp-in-string "\n\\'" "" head)
-		      :foreground "#d33682") "] "))) "\n"
-	   (with-face ">":foreground "#268bd2") " "))))
+        (let ((red       "#dc322f")
+              (purple    "#FFCCFF")
+              (magenta   "#d33682")
+              (base      "#839496"))
+          (concat
+           (let ((status eshell-last-command-status))
+             (when (not (= status 0))
+               (with-face (concat "[" (number-to-string status) "] ") :foreground "#dc322f")))
+           (with-face "┌─@" :foreground (if (= (user-uid) 0) "#dc322f" "#268bd2"))
+           (with-face (system-name) :foreground "#b58900") " "
+           (with-face (replace-regexp-in-string (concat "\\`" (getenv "HOME")) "~" (eshell/pwd))
+                      :foreground "#268bd2")
+           ;; TODO: Display more Git info.
+           (let ((head (shell-command-to-string "git describe --contains --all HEAD")))
+             (unless (string-match "fatal:" head)
+               (concat "[" (with-face (replace-regexp-in-string "\n\\'" "" head)
+                                      :foreground "#d33682") "] "))) "\n"
+                                      (with-face ">":foreground "#268bd2") " "))))
 
 ;; Toggle eshell function
 (fset 'eshell-on
@@ -226,6 +346,23 @@
       (execute-kbd-macro (symbol-function 'eshell-off))
     (execute-kbd-macro (symbol-function 'eshell-on))))
 
+;;; TAB behavior
+(setq tab-always-indent 'complete)
+(setq-default indent-tabs-mode nil)   ; never use tabs to indent.
+
+;; Whitespace
+(setq whitespace-style '(face tabs tab-mark trailing))
+(custom-set-faces
+ '(whitespace-tab ((t (:foreground "#636363")))))
+(setq whitespace-display-mappings
+      '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
+(global-whitespace-mode) ; Enable whitespace mode everywhere
+                                        ; END TABS CONFIG
+
+;; ediff
+(setq ediff-diff-options "-w"
+      ediff-split-window-function #'split-window-horizontally
+      ediff-window-setup-function #'ediff-setup-windows-plain)
 
 ;; Custom Key Bindings
 (local-unset-key (kbd "C-c C-c"))
@@ -238,4 +375,5 @@
 (global-set-key (kbd "s-f") 'grep-find)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-c") 'compile)
-(global-set-key (kbd "s-t") 'neotree-toggle)
+(global-set-key (kbd "C-c f") 'counsel-flycheck)
+

@@ -1,0 +1,10 @@
+auto-save-list/
+var/
+elpa/
+etc/
+cache/
+eclipse.jdt.ls/
+workspace/
+recentf
+smex-items
+.lsp-session-v1
