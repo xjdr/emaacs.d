@@ -9,7 +9,7 @@
   (let ((path-from-shell (replace-regexp-in-string
                           "[ \t\n]*$"
                           ""
-                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+                          (shell-command-to-string "$SHELL --login -c 'echo $PATH'"))))
     (setenv "PATH" path-from-shell)
     (setq eshell-path-env path-from-shell) ; for eshell users
     (setq exec-path (split-string path-from-shell path-separator))))
@@ -136,13 +136,13 @@
   :config
   (global-set-key (kbd "C-c g") 'magit-status))
 
-(use-package moody
-  :ensure t
-  :config
-  (setq x-underline-at-descent-line t)
-  (setq moody-slant-function #'moody-slant-apple-rgb)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+;(use-package moody
+;  :ensure t
+;  :config
+;  (setq x-underline-at-descent-line t)
+;  (setq moody-slant-function #'moody-slant-apple-rgb)
+;  (moody-replace-mode-line-buffer-identification)
+;  (moody-replace-vc-mode))
 
 (use-package smex
   :ensure t)
@@ -237,7 +237,10 @@
             (lambda ()
               (setq rust-format-on-save t)
               (setq-local company-backends (list 'company-lsp))
-              (setq flycheck-rust-clippy-executable "/Users/xjdr/.cargo/bin/cargo-clippy"))) ;; TODO Add Darwin | linux config
+              (if (eq system-type 'darwin)
+                  (setq flycheck-rust-clippy-executable "/Users/xjdr/.cargo/bin/cargo-clippy"))
+              (if (eq system-type 'gnu/linux)
+                  (setq flycheck-rust-clippy-executable "/home/xjdr/.cargo/bin/cargo-clippy"))))
   (add-hook 'rust-mode-hook 'flycheck-mode)
   (add-hook 'rust-mode-hook 'company-mode))
 
@@ -245,10 +248,15 @@
   :ensure t)
 
 (use-package racer
-  :ensure t
+  :requires rust-mode
+  :init (setq racer-rust-src-path
+              (concat (string-trim
+                       (shell-command-to-string "rustc --print sysroot"))
+                      "/lib/rustlib/src/rust/src"))
   :config
   (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode))
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'racer-mode-hook #'company-mode))
 
 ;; C++
 (use-package google-c-style
@@ -263,8 +271,11 @@
 (add-hook 'c++-mode-hook 'lsp)
 
 ;; Python
+(if (eq system-type 'darwin)
+    (setq  python-shell-interpreter "/usr/local/bin/ipython"))
+(if (eq system-type 'gnu/linux)
+    (setq  python-shell-interpreter "/usr/bin/ipython3"))
 (setq
- python-shell-interpreter "/usr/local/bin/ipython"
  python-shell-interpreter-args "-i --simple-prompt --colors=Linux --profile=default"
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
@@ -279,12 +290,9 @@ ansi-color-for-comint-mode t)
 (add-hook 'python-mode-hook
     (lambda ()
       (setq flycheck-python-pylint-executable (concat (vc-call-backend 'Git 'root default-directory) "/venv/bin/pylint"))
-      (setq flycheck-pylintrc "/Users/xjdr/pylintrc"))) ;; TODO Add Darwin | linux config
-
-(add-hook 'python-mode-hook
-      (lambda ()
-        (setq tab-width 2)
-        (setq python-indent-offset 2)))
+      (setq flycheck-pylintrc (concat (vc-call-backend 'Git 'root default-directory) ".pylintrc"))
+      (setq tab-width 2)
+      (setq python-indent-offset 2)))
 
 ;; Javascript
 (add-hook 'js-mode-hook
@@ -309,8 +317,10 @@ ansi-color-for-comint-mode t)
   :hook (prog-mode . lsp)
   :config (require 'lsp-clients)
   :init
-  (when (equal system-type 'darwin)
-    (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")))  ;; TODO Add Darwin | linux config
+  (if (eq system-type 'darwin)
+      (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
+  (if (eq system-type 'gnu/linux)
+      (setq lsp-clients-clangd-executable "/usr/bin/clangd-8")))
 
 (use-package lsp-ui
   :ensure t
@@ -320,6 +330,10 @@ ansi-color-for-comint-mode t)
 
 (use-package hydra
   :ensure t)
+
+(use-package yasnippet
+  :ensure t
+  :hook (prog-mode . yas-minor-mode))
 
 (use-package company
   :ensure t)
@@ -441,4 +455,6 @@ ansi-color-for-comint-mode t)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-c") 'compile)
 (global-set-key (kbd "C-x f") 'counsel-flycheck)
+
+
 
