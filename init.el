@@ -53,7 +53,7 @@
 (fringe-mode '(0 . 0))
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq inhibit-splash-screen t ring-bell-function 'ignore)
-(set-face-attribute 'default nil :height 125 :font "Hack")
+(set-face-attribute 'default nil :height 125 :font "Hack")  ;; TODO Add Darwin | linux config (probably don't have hack on linux)
 
 ;; Setup
 (when (fboundp 'set-charset-priority)
@@ -237,7 +237,7 @@
             (lambda ()
               (setq rust-format-on-save t)
               (setq-local company-backends (list 'company-lsp))
-              (setq flycheck-rust-clippy-executable "/Users/xjdr/.cargo/bin/cargo-clippy")))
+              (setq flycheck-rust-clippy-executable "/Users/xjdr/.cargo/bin/cargo-clippy"))) ;; TODO Add Darwin | linux config
   (add-hook 'rust-mode-hook 'flycheck-mode)
   (add-hook 'rust-mode-hook 'company-mode))
 
@@ -279,7 +279,7 @@ ansi-color-for-comint-mode t)
 (add-hook 'python-mode-hook
     (lambda ()
       (setq flycheck-python-pylint-executable (concat (vc-call-backend 'Git 'root default-directory) "/venv/bin/pylint"))
-      (setq flycheck-pylintrc "/Users/xjdr/pylintrc")))
+      (setq flycheck-pylintrc "/Users/xjdr/pylintrc"))) ;; TODO Add Darwin | linux config
 
 (add-hook 'python-mode-hook
       (lambda ()
@@ -310,7 +310,7 @@ ansi-color-for-comint-mode t)
   :config (require 'lsp-clients)
   :init
   (when (equal system-type 'darwin)
-    (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")))
+    (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd")))  ;; TODO Add Darwin | linux config
 
 (use-package lsp-ui
   :ensure t
@@ -361,7 +361,7 @@ ansi-color-for-comint-mode t)
   `(propertize ,str 'face (list ,@properties)))
 
 (require 'eshell)
-(setq eshell-visual-commands '("bash" "htop"))
+(setq eshell-visual-commands '("zsh" "bash" "htop"))
 (setq eshell-visual-subcommands
       '(("git" "log" "l" "ll" "diff" "show")))
 (setq eshell-prompt-regexp "^> ")
@@ -421,7 +421,7 @@ ansi-color-for-comint-mode t)
 ;; Find with rg
 (require 'grep)
 (grep-apply-setting 'grep-find-command
-                    "rg -i -M 120 --no-heading --line-number --color never ")
+                    "rg -i -M 120 --no-heading --line-number --color never ") ;; TODO Make sure ripgrep is installed
 
 ;; Find with ag
 ;; (grep-apply-setting 'grep-find-command
