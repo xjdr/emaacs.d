@@ -113,17 +113,23 @@
   :config
   (show-paren-mode))
 
-(use-package solarized-theme
+(use-package gruvbox-theme
   :ensure t
   :config
-  (load-theme 'solarized-light t)
-  (let ((line (face-attribute 'mode-line :underline)))
-    (set-face-attribute 'mode-line          nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :underline  line)
-    (set-face-attribute 'mode-line          nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
+  (load-theme 'gruvbox t)
+  (let ((line (face-attribute 'mode-line :underline)))))
+
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'solarized-light t)
+;;   (let ((line (face-attribute 'mode-line :underline)))
+;;     (set-face-attribute 'mode-line          nil :overline   line)
+;;     (set-face-attribute 'mode-line-inactive nil :overline   line)
+;;     (set-face-attribute 'mode-line-inactive nil :underline  line)
+;;     (set-face-attribute 'mode-line          nil :box        nil)
+;;     (set-face-attribute 'mode-line-inactive nil :box        nil)
+;;     (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
 
 (use-package magit
   :ensure t
@@ -134,6 +140,7 @@
   :ensure t
   :config
   (setq x-underline-at-descent-line t)
+  (setq moody-slant-function #'moody-slant-apple-rgb)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
@@ -146,8 +153,8 @@
              counsel-bookmark)
   :bind* (("C-c i" . counsel-imenu)
           ("C-x b" . ivy-switch-buffer)
+          ("C-c /" . counsel-rg)
           ("C-x C-f" . counsel-find-file)
-          ("C-c C-/" . counsel-rg)
           ("M-y" . counsel-yank-pop)
           ("M-x" . counsel-M-x))
   :config
@@ -173,11 +180,11 @@
   (ivy-use-virtual-buffers t)
   :config
   (ivy-mode 1)
-  (setq ivy-display-function nil))
+  (setq ivy-display-function nil)
+  (set-face-attribute 'ivy-current-match nil :background "#3c3836")) ;; for gruvbox theme only
 
 (use-package ibuffer
   :ensure t)
-
 
 ;; Flycheck
 (use-package flycheck
@@ -253,6 +260,40 @@
             (google-make-newline-indent)))
 (add-hook 'c++-mode-hook 'flycheck-mode)
 (add-hook 'c++-mode-hook 'company-mode)
+(add-hook 'c++-mode-hook 'lsp)
+
+;; Python
+(setq
+ python-shell-interpreter "/usr/local/bin/ipython"
+ python-shell-interpreter-args "-i --simple-prompt --colors=Linux --profile=default"
+ python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+ python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+ python-shell-completion-setup-code
+ "from IPython.core.completerlib import module_completion"
+ python-shell-completion-module-string-code
+ "';'.join(module_completion('''%s'''))\n"
+ python-shell-completion-string-code
+ "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"
+ansi-color-for-comint-mode t)
+
+(add-hook 'python-mode-hook
+    (lambda ()
+      (setq flycheck-python-pylint-executable (concat (vc-call-backend 'Git 'root default-directory) "/venv/bin/pylint"))
+      (setq flycheck-pylintrc "/Users/xjdr/pylintrc")))
+
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq tab-width 2)
+        (setq python-indent-offset 2)))
+
+;; Javascript
+(add-hook 'js-mode-hook
+            (lambda ()
+              (setq flycheck-javascript-eslint-executable (concat (vc-call-backend 'Git 'root default-directory) "node_modules/eslint/bin/eslint.js"))))
+  (add-hook 'js-mode-hook
+            (lambda ()
+              (setq tab-width 2)
+              (setq js-indent-level 2)))
 
 ;; LSP
 (use-package editorconfig
@@ -275,7 +316,7 @@
   :ensure t
   :hook (lsp-mode . lsp-ui-mode)
   :config
-  (set-face-attribute 'lsp-ui-doc-background nil :background "#f9f2d9"))
+  (set-face-attribute 'lsp-ui-doc-background nil :background "#3c3836"))
 
 (use-package hydra
   :ensure t)
@@ -289,6 +330,19 @@
   :config
   (setq company-lsp-cache-candidates t
         company-lsp-async t))
+
+;; Java
+(use-package lsp-java
+  :ensure t
+  :config
+  (setq lsp-java-inhibit-message t)
+  (setq lsp-ui-sideline-update-mode 'point)
+  (add-hook 'java-mode-hook
+            (lambda ()
+              (setq-local company-backends (list 'company-lsp))))
+  (add-hook 'java-mode-hook 'lsp)
+  (add-hook 'java-mode-hook 'flycheck-mode)
+  (add-hook 'java-mode-hook 'company-mode))
 
 ;; Config
 (use-package yaml-mode
@@ -364,7 +418,18 @@
       ediff-split-window-function #'split-window-horizontally
       ediff-window-setup-function #'ediff-setup-windows-plain)
 
+;; Find with rg
+(require 'grep)
+(grep-apply-setting 'grep-find-command
+                    "rg -i -M 120 --no-heading --line-number --color never ")
+
+;; Find with ag
+;; (grep-apply-setting 'grep-find-command
+;;                     "ag --vimgrep ")
+
+
 ;; Custom Key Bindings
+(local-unset-key (kbd "C-x f"))
 (local-unset-key (kbd "C-c C-c"))
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -375,5 +440,5 @@
 (global-set-key (kbd "s-f") 'grep-find)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c C-c") 'compile)
-(global-set-key (kbd "C-c f") 'counsel-flycheck)
+(global-set-key (kbd "C-x f") 'counsel-flycheck)
 
